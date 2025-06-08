@@ -3,7 +3,7 @@ using Infrastructure.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Web.Api.Extensions;
+using Web.Api;
 using Web.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);

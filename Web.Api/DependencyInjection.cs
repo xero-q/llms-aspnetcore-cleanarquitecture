@@ -5,9 +5,9 @@ using FluentValidation;
 using Infrastructure.Repositories;
 using Infrastucture.Repositories;
 
-namespace Web.Api.Extensions;
+namespace Web.Api;
     
-public static class ApplicationServiceCollectionExtensions
+public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
