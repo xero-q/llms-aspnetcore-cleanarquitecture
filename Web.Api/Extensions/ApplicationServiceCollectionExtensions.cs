@@ -4,7 +4,6 @@ using Domain.Validators;
 using FluentValidation;
 using Infrastructure.Repositories;
 using Infrastucture.Repositories;
-using LLMStudio;
 
 namespace Web.Api.Extensions;
     
