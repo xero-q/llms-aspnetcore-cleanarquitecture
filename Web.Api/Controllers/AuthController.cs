@@ -12,7 +12,7 @@ public class AuthController(IAuthenticationService authenticationService) : Cont
     [HttpPost(ApiEndpoints.Auth.Login)]
     public async Task<IActionResult> LoginUser([FromBody] LoginRequest request)
     {
-        var userPasswordCorrect = await authenticationService.Authenticate(request.Username, request.Password);
+        var userPasswordCorrect = await authenticationService.VerifyUser(request);
 
         if (!userPasswordCorrect)
         {

@@ -1,6 +1,6 @@
 namespace Application.Contracts.Responses;
 
-public class ModelTypeResponse
+public sealed class ModelTypeResponse
 {
     public required int Id { get; init; }
     

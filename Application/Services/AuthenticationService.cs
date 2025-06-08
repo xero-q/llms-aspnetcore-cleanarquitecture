@@ -1,6 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Application.Contracts.Requests;
 using Application.Helpers;
 using Domain.Interfaces;
 using Microsoft.Extensions.Configuration;
@@ -19,16 +20,16 @@ public class AuthenticationService : IAuthenticationService
         _userRepository = userRepository;
     }
 
-    public async Task<bool> Authenticate(string username, string password)
+    public async Task<bool> VerifyUser(LoginRequest request)
     {
-        var user = await _userRepository.GetByUsernameAsync(username);
+        var user = await _userRepository.GetByUsernameAsync(request.Username);
 
         if (user == null)
         {
             return false;
         }
 
-        return PasswordHelper.VerifyPassword(password, user.Password);
+        return PasswordHelper.VerifyPassword(request.Username, user.Password);
     }
     
     public string GenerateToken(string username)

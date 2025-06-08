@@ -1,6 +1,6 @@
 namespace Application.Contracts.Responses;
 
-public class ModelTypesResponse
+public sealed class ModelTypesResponse
 {
     public IEnumerable<ModelTypeResponse> Items { get; init; } = [];
 }

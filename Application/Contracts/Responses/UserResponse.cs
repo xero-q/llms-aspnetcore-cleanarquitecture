@@ -1,6 +1,6 @@
 namespace Application.Contracts.Responses;
 
-public class UserResponse
+public sealed class UserResponse
 {
     public required int Id { get; set; }
     

@@ -1,6 +1,6 @@
 namespace Application.Contracts.Requests;
 
-public class CreateUserRequest
+public sealed class CreateUserRequest
 {
     public required string Username { get; init; }
     

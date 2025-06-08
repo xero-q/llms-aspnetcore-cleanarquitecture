@@ -1,6 +1,6 @@
 namespace Application.Contracts.Requests;
 
-public class CreateModelRequest
+public sealed class CreateModelRequest
 {
     public required string Name { get; init; }
     
