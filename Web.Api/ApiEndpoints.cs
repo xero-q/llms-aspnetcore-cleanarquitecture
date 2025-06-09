@@ -1,4 +1,4 @@
-namespace SharedKernel;
+namespace Web.Api;
 
 public static class ApiEndpoints
 {
