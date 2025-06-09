@@ -13,7 +13,7 @@ public class UserConfiguration:IEntityTypeConfiguration<User>
         builder.HasKey(u=>u.Id);
         builder.Property(u => u.Id).HasColumnName("id");
         
-        builder.Property(u => u.Username).HasColumnName("username").IsRequired();
+        builder.Property(u => u.Username).HasColumnName("username").IsRequired().HasMaxLength(255);
         builder.Property(u => u.Password).HasColumnName("password").IsRequired();
         builder.HasIndex(u=>u.Username).IsUnique();
     }

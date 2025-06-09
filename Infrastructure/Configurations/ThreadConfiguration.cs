@@ -13,7 +13,7 @@ public class ThreadConfiguration:IEntityTypeConfiguration<Thread>
         builder.HasKey(t => t.Id);
         builder.Property(t => t.Id).HasColumnName("id");
         
-        builder.Property(t => t.Title).HasColumnName("title").IsRequired();
+        builder.Property(t => t.Title).HasColumnName("title").IsRequired().HasMaxLength(255);
         builder.HasIndex(t => t.Title).IsUnique();
         
         builder.Property(t => t.CreatedAt).HasColumnName("created_at").IsRequired();

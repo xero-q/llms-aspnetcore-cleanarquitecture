@@ -13,9 +13,9 @@ public class ModelConfiguration:IEntityTypeConfiguration<Model>
         builder.HasKey(m=>m.Id);
         builder.Property(m => m.Id).HasColumnName("id");
         
-        builder.Property(m => m.Name).HasColumnName("name").IsRequired();
+        builder.Property(m => m.Name).HasColumnName("name").IsRequired().HasMaxLength(255);
         
-        builder.Property(m => m.Identifier).HasColumnName("identifier").IsRequired();
+        builder.Property(m => m.Identifier).HasColumnName("identifier").IsRequired().HasMaxLength(255);
         
         builder.Property(m => m.Temperature).HasColumnName("temperature").IsRequired();
         
