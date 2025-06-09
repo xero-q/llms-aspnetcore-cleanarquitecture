@@ -1,10 +1,4 @@
-﻿using Application.Services;
-using Domain.Interfaces;
-using Domain.Validators;
-using FluentValidation;
-using Infrastructure.Repositories;
-
-namespace Web.Api;
+﻿namespace Web.Api;
     
 public static class DependencyInjection
 {
