@@ -29,7 +29,7 @@ public class AuthenticationService : IAuthenticationService
             return false;
         }
 
-        return PasswordHelper.VerifyPassword(request.Username, user.Password);
+        return PasswordHelper.VerifyPassword(request.Password, user.Password);
     }
     
     public string GenerateToken(string username)
