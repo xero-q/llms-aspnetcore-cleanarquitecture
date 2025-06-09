@@ -1,5 +1,5 @@
 using Application.Abstractions.Repositories;
-using Infrastructure.Persistence;
+using Infrastructure.Database.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;

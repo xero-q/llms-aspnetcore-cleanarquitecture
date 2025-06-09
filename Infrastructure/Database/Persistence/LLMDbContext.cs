@@ -2,7 +2,7 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Thread = Domain.Entities.Thread;
 
-namespace Infrastructure.Persistence;
+namespace Infrastructure.Database.Persistence;
 
 public class LLMDbContext(DbContextOptions<LLMDbContext> options) : DbContext(options)
 {
@@ -14,11 +14,11 @@ public class LLMDbContext(DbContextOptions<LLMDbContext> options) : DbContext(op
         
         modelBuilder.Entity<Thread>()
             .Property(b => b.CreatedAt)
-            .HasDefaultValueSql("NOW()"); // PostgreSQL
+            .HasDefaultValueSql("CURRENT_TIMESTAMP"); // PostgreSQL
         
         modelBuilder.Entity<Prompt>()
             .Property(b => b.CreatedAt)
-            .HasDefaultValueSql("NOW()"); // PostgreSQL
+            .HasDefaultValueSql("CURRENT_TIMESTAMP"); // PostgreSQL
         
         modelBuilder.Entity<Thread>()
             .HasOne(t => t.Model)
@@ -44,9 +44,6 @@ public class LLMDbContext(DbContextOptions<LLMDbContext> options) : DbContext(op
             .WithMany(u => u.Threads)
             .HasForeignKey(t => t.UserId)
             .OnDelete(DeleteBehavior.Restrict);
-        
-        
-        
     }
     
     public DbSet<ModelType> ModelTypes { get; set; }

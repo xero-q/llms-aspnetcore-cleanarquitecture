@@ -2,7 +2,7 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Database.Configurations;
 
 public class ModelTypeConfiguration:IEntityTypeConfiguration<ModelType>
 {

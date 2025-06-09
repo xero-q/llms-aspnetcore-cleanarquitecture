@@ -1,6 +1,6 @@
 using System.Text;
 using Application.Abstractions.Repositories;
-using Infrastructure.Persistence;
+using Infrastructure.Database.Persistence;
 using Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;

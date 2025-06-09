@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Thread = Domain.Entities.Thread;
 
-namespace Infrastructure.Configurations;
+namespace Infrastructure.Database.Configurations;
 
 public class ThreadConfiguration:IEntityTypeConfiguration<Thread>
 {

@@ -4,10 +4,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Infrastructure.Persistence.Migrations
+namespace Infrastructure.Database.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialModels : Migration
+    public partial class InitialModelsCreation : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -18,7 +18,7 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false)
+                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -31,7 +31,7 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    username = table.Column<string>(type: "text", nullable: false),
+                    username = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     password = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -45,8 +45,8 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    name = table.Column<string>(type: "text", nullable: false),
-                    identifier = table.Column<string>(type: "text", nullable: false),
+                    name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    identifier = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     temperature = table.Column<double>(type: "double precision", nullable: false),
                     environment_variable = table.Column<string>(type: "text", nullable: false),
                     model_type_id = table.Column<int>(type: "integer", nullable: false)
@@ -68,23 +68,23 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    title = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
-                    model_id = table.Column<int>(type: "integer", nullable: false),
-                    user_id = table.Column<int>(type: "integer", nullable: false)
+                    title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    ModelId = table.Column<int>(type: "integer", nullable: false),
+                    UserId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_threads", x => x.id);
                     table.ForeignKey(
-                        name: "FK_threads_models_model_id",
-                        column: x => x.model_id,
+                        name: "FK_threads_models_ModelId",
+                        column: x => x.ModelId,
                         principalTable: "models",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_threads_users_user_id",
-                        column: x => x.user_id,
+                        name: "FK_threads_users_UserId",
+                        column: x => x.UserId,
                         principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -98,15 +98,15 @@ namespace Infrastructure.Persistence.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     prompt = table.Column<string>(type: "text", nullable: false),
                     response = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "NOW()"),
-                    thread_id = table.Column<int>(type: "integer", nullable: false)
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    ThreadId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_prompts", x => x.id);
                     table.ForeignKey(
-                        name: "FK_prompts_threads_thread_id",
-                        column: x => x.thread_id,
+                        name: "FK_prompts_threads_ThreadId",
+                        column: x => x.ThreadId,
                         principalTable: "threads",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -124,14 +124,14 @@ namespace Infrastructure.Persistence.Migrations
                 column: "model_type_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_prompts_thread_id",
+                name: "IX_prompts_ThreadId",
                 table: "prompts",
-                column: "thread_id");
+                column: "ThreadId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_threads_model_id",
+                name: "IX_threads_ModelId",
                 table: "threads",
-                column: "model_id");
+                column: "ModelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_threads_title",
@@ -140,9 +140,9 @@ namespace Infrastructure.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_threads_user_id",
+                name: "IX_threads_UserId",
                 table: "threads",
-                column: "user_id");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_users_username",
