@@ -1,5 +1,5 @@
+using Application.Abstractions.Repositories;
 using Domain.Entities;
-using Domain.Interfaces;
 using FluentValidation;
 
 namespace Application.Services;

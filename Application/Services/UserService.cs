@@ -1,6 +1,6 @@
+using Application.Abstractions.Repositories;
 using Application.Helpers;
 using Domain.Entities;
-using Domain.Interfaces;
 using FluentValidation;
 
 namespace Application.Services;
