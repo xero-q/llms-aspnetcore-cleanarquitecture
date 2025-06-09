@@ -9,20 +9,11 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace Application.Services;
 
-public class AuthenticationService : IAuthenticationService
+public class AuthenticationService(IConfiguration config, IUserService userService) : IAuthenticationService
 {
-    private readonly IConfiguration _config;
-    private readonly IUserRepository _userRepository;
-
-    public AuthenticationService(IConfiguration config, IUserRepository userRepository)
-    {
-        _config = config;
-        _userRepository = userRepository;
-    }
-
     public async Task<bool> VerifyUser(LoginRequest request)
     {
-        var user = await _userRepository.GetByUsernameAsync(request.Username);
+        var user = await userService.GetByUsernameAsync(request.Username);
 
         if (user == null)
         {
@@ -34,7 +25,7 @@ public class AuthenticationService : IAuthenticationService
     
     public string GenerateToken(string username)
     {
-        var jwtConfig = _config.GetSection("Jwt");
+        var jwtConfig = config.GetSection("Jwt");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 

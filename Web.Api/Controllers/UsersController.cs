@@ -11,7 +11,7 @@ namespace Web.Api.Controllers;
 public class UsersController(IUserService userService) : ControllerBase
 {
     [HttpPost(ApiEndpoints.Users.Create)]
-    public async Task<ActionResult<User>> RegisterUser([FromBody] CreateUserRequest request)
+    public async Task<IActionResult> RegisterUser([FromBody] CreateUserRequest request)
     {
         if (await userService.UsernameExistsAsync(request.Username))
         {
