@@ -1,7 +1,6 @@
 using Application.Contracts.Requests;
 using Application.Mappings;
 using Application.Services;
-using SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
