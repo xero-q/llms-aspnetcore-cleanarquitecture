@@ -1,10 +1,11 @@
 using Application.Abstractions.Repositories;
 using Infrastructure.Database.Persistence;
 using Microsoft.EntityFrameworkCore;
+using SharedKernel;
 
 namespace Infrastructure.Repositories;
 
-public class GenericRepositoryAsync<T>(LLMDbContext context):IGenericRepositoryAsync<T> where T:class
+public class GenericRepositoryAsync<T>(LLMDbContext context):IGenericRepositoryAsync<T> where T:Entity
 {
     public virtual async Task<bool> CreateAsync(T entity)
     {
@@ -25,11 +26,23 @@ public class GenericRepositoryAsync<T>(LLMDbContext context):IGenericRepositoryA
 
     public virtual async Task<bool> UpdateAsync(T entity)
     {
-        throw new NotImplementedException();
+        var existing = await context.Set<T>().FindAsync(entity.Id);
+        if (existing == null)
+            return false;
+
+        context.Entry(existing).CurrentValues.SetValues(entity);
+        var result = await context.SaveChangesAsync();
+        return result > 0;
     }
 
     public virtual async Task<bool> DeleteByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        var entity = await context.Set<T>().FindAsync(id);
+        if (entity == null)
+            return false;
+
+        context.Set<T>().Remove(entity);
+        var result = await context.SaveChangesAsync();
+        return result > 0;
     }
 }
