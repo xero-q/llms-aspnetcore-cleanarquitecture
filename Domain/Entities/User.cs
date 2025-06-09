@@ -1,24 +1,11 @@
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.EntityFrameworkCore;
+using SharedKernel;
 
 namespace Domain.Entities;
 
-[Table("users")]
-[Index(nameof(Username), IsUnique = true)]
-public class User
+public sealed class User:Entity
 {
-    [Key]
-    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    [Column("id")]
-    public int Id { get; set; }
-
-    [Required]
-    [Column("username")]
     public string Username { get; set; }
     
-    [Required]
-    [Column("password")]
     public string Password { get; set; }
     
     public List<Thread> Threads { get; set; } = new();

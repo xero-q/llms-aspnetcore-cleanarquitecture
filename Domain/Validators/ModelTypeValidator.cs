@@ -1,6 +1,6 @@
 using Domain.Entities;
 using FluentValidation;
-using LLMStudio;
+using SharedKernel;
 
 namespace Domain.Validators;
 

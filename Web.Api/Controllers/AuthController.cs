@@ -1,7 +1,7 @@
 using Application.Contracts.Requests;
 using Application.Contracts.Responses;
 using Application.Services;
-using LLMStudio;
+using SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Api.Controllers;

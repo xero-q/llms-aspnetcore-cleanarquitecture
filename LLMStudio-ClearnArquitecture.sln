@@ -8,7 +8,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{A4687D40-8206-42B0-A546-85C999FC53F0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LLMStudio", "LLMStudio\LLMStudio.csproj", "{ED681B07-F56A-4765-A097-DB4336EFFDE5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel", "SharedKernel\SharedKernel.csproj", "{ED681B07-F56A-4765-A097-DB4336EFFDE5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{125AF155-328A-4750-A46D-AC9468903CD5}"
 EndProject

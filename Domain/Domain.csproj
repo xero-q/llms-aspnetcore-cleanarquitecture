@@ -17,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\LLMStudio\LLMStudio.csproj" />
+      <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
     </ItemGroup>
 
 </Project>

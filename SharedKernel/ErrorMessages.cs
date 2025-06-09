@@ -1,4 +1,4 @@
-namespace LLMStudio;
+namespace SharedKernel;
 
 public static class ErrorMessages
 {

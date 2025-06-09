@@ -2,7 +2,7 @@ using Application.Contracts.Requests;
 using Application.Mappings;
 using Application.Services;
 using Domain.Entities;
-using LLMStudio;
+using SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Api.Controllers;

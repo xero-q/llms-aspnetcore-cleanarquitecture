@@ -10,6 +10,8 @@ public class LLMDbContext(DbContextOptions<LLMDbContext> options) : DbContext(op
     {
         base.OnModelCreating(modelBuilder);
         
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(LLMDbContext).Assembly);
+        
         modelBuilder.Entity<Thread>()
             .Property(b => b.CreatedAt)
             .HasDefaultValueSql("NOW()"); // PostgreSQL
@@ -42,6 +44,9 @@ public class LLMDbContext(DbContextOptions<LLMDbContext> options) : DbContext(op
             .WithMany(u => u.Threads)
             .HasForeignKey(t => t.UserId)
             .OnDelete(DeleteBehavior.Restrict);
+        
+        
+        
     }
     
     public DbSet<ModelType> ModelTypes { get; set; }

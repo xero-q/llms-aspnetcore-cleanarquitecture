@@ -1,7 +1,7 @@
 using Application.Contracts.Requests;
 using Application.Mappings;
 using Domain.Interfaces;
-using LLMStudio;
+using SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 
