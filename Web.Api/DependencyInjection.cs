@@ -3,7 +3,6 @@ using Domain.Interfaces;
 using Domain.Validators;
 using FluentValidation;
 using Infrastructure.Repositories;
-using Infrastucture.Repositories;
 
 namespace Web.Api;
     
@@ -16,6 +15,8 @@ public static class DependencyInjection
         services.AddScoped<IModelRepository, ModelRepository>();
         services.AddScoped<IAuthenticationService, AuthenticationService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IModelTypeService, ModelTypeService>();
+        services.AddScoped<IModelService, ModelService>();
         services.AddValidatorsFromAssemblyContaining<ModelTypeValidator>();
         services.AddValidatorsFromAssemblyContaining<ModelValidator>();
         services.AddValidatorsFromAssemblyContaining<UserValidator>();

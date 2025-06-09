@@ -1,6 +1,6 @@
 using Application.Contracts.Requests;
 using Application.Mappings;
-using Domain.Interfaces;
+using Application.Services;
 using SharedKernel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Web.Api.Controllers;
 
 [ApiController]
-public class ModelsController(IModelTypeRepository modelTypeRepository, IModelRepository modelRepository)
+public class ModelsController(IModelService modelService)
     : ControllerBase
 {
     [HttpPost(ApiEndpoints.Models.Create)]
@@ -16,7 +16,7 @@ public class ModelsController(IModelTypeRepository modelTypeRepository, IModelRe
     public async Task<IActionResult> Create([FromBody] CreateModelRequest request)
     {
         // Verify ModelType exists
-        var modelType = await modelTypeRepository.GetByIdAsync(request.ModelTypeId);
+        var modelType = await modelService.GetByIdAsync(request.ModelTypeId);
 
         if (modelType == null)
         {
@@ -24,7 +24,7 @@ public class ModelsController(IModelTypeRepository modelTypeRepository, IModelRe
         }
         
         var model = request.MapToModel();
-        await modelRepository.CreateAsync(model);
+        await modelService.CreateAsync(model);
         var modelResponse = model.MapToResponse();
         return Created();
         //TODO return CreatedAtAction(nameof(GetModelType), new { id = modelType.Id }, modelTypeResponse);
@@ -33,7 +33,7 @@ public class ModelsController(IModelTypeRepository modelTypeRepository, IModelRe
     [HttpGet(ApiEndpoints.Models.GetAll)]
     public async Task<IActionResult> GetAll()
     {
-        var models = await modelRepository.GetAllAsync();
+        var models = await modelService.GetAllAsync();
         var response = models.MapToResponse();
         
         return Ok(response);

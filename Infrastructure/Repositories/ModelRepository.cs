@@ -1,16 +1,14 @@
 using Domain.Interfaces;
 using Domain.Entities;
-using FluentValidation;
 using Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories;
 
-public class ModelRepository(LLMDbContext context, IValidator<Model> validator) : IModelRepository
+public class ModelRepository(LLMDbContext context) : IModelRepository
 {
     public async Task<bool> CreateAsync(Model model)
     {
-        await validator.ValidateAndThrowAsync(model);
         context.Models.Add(model);
         var result = await context.SaveChangesAsync();
         return result > 0;
@@ -18,7 +16,7 @@ public class ModelRepository(LLMDbContext context, IValidator<Model> validator) 
 
     public async Task<Model?> GetByIdAsync(int id)
     {
-        throw new NotImplementedException();
+        return await context.Models.FindAsync(id);
     }
 
     public async Task<IEnumerable<Model>> GetAllAsync()
