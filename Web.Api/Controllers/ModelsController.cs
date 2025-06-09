@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Web.Api.Controllers;
 
 [ApiController]
-public class ModelsController(IModelService modelService)
+public class ModelsController(IModelService modelService, IModelTypeService modelTypeService)
     : ControllerBase
 {
     [HttpPost(ApiEndpoints.Models.Create)]
@@ -16,7 +16,7 @@ public class ModelsController(IModelService modelService)
     public async Task<IActionResult> Create([FromBody] CreateModelRequest request)
     {
         // Verify ModelType exists
-        var modelType = await modelService.GetByIdAsync(request.ModelTypeId);
+        var modelType = await modelTypeService.GetByIdAsync(request.ModelTypeId);
 
         if (modelType == null)
         {

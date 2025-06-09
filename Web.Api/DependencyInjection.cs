@@ -8,19 +8,12 @@ namespace Web.Api;
     
 public static class DependencyInjection
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+    public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
-        services.AddScoped<IModelTypeRepository, ModelTypeRepository>();
-        services.AddScoped<IUserRepository, UserRepository>();
-        services.AddScoped<IModelRepository, ModelRepository>();
-        services.AddScoped<IAuthenticationService, AuthenticationService>();
-        services.AddScoped<IUserService, UserService>();
-        services.AddScoped<IModelTypeService, ModelTypeService>();
-        services.AddScoped<IModelService, ModelService>();
-        services.AddValidatorsFromAssemblyContaining<ModelTypeValidator>();
-        services.AddValidatorsFromAssemblyContaining<ModelValidator>();
-        services.AddValidatorsFromAssemblyContaining<UserValidator>();
-        
+        services.AddAuthentication();
+        services.AddAuthorization();
+        services.AddControllers();
+
         return services;
     } 
 }

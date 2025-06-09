@@ -1,44 +1,16 @@
-using System.Text;
-using Infrastructure.Persistence;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
+using Application;
+using Infrastructure;
 using Web.Api;
 using Web.Api.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi();
 builder.Services.AddApplication();
+builder.Services.AddDatabase(builder.Configuration);
+builder.Services.AddPresentation();
 
 DotNetEnv.Env.Load();
 builder.Configuration.AddEnvironmentVariables();
-
-var jwtConfig = builder.Configuration.GetSection("Jwt");
-builder.Services.AddAuthentication(options =>
-    {
-        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(options =>
-    {
-        options.TokenValidationParameters = new TokenValidationParameters
-        {
-            ValidateIssuer = true,
-            ValidateAudience = true,
-            ValidateLifetime = true,
-            ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtConfig["Issuer"],
-            ValidAudience = jwtConfig["Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Key"]!))
-        };
-    });
-
-builder.Services.AddAuthorization();
-builder.Services.AddControllers();
-builder.Services.AddDbContext<LLMDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
-
 
 var app = builder.Build();
 
@@ -63,4 +35,3 @@ app.UseMiddleware<ValidationMappingMiddleware>();
 app.MapControllers();
 
 app.Run();
-
