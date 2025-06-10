@@ -22,26 +22,13 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
             return BadRequest(new {error = ErrorMessages.ThreadSameTitleExists});
         }
         
-        var userId = HttpContext.GetUserId();
-        
-        if (userId == null)
+        var userResult = await GetValidatedUserIdAsync();
+        if (userResult is IActionResult errorResult)
         {
-            return BadRequest(new {error=ErrorMessages.TokenHasNotUserId});
+            return errorResult;
         }
 
-        var validInt = int.TryParse(userId, out var userIdInt);
-
-        if (!validInt)
-        {
-            return BadRequest(new {error = ErrorMessages.TokenInvalidUserId});
-        }
-
-        var existingUser = await userService.GetByIdAsync(userIdInt);
-
-        if (existingUser == null)
-        {
-            return BadRequest(new {error = ErrorMessages.TokenInvalidUser}); 
-        }
+        var userIdInt = userResult as int? ?? 0;
         
         var thread = request.MapToThread(userIdInt);
         await threadService.CreateAsync(thread);
@@ -54,31 +41,42 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
     [Authorize]
     public async Task<IActionResult> GetThreads()
     {
-        var userId = HttpContext.GetUserId();
-        
-        if (userId == null)
+        var userResult = await GetValidatedUserIdAsync();
+        if (userResult is IActionResult errorResult)
         {
-            return BadRequest(new {error=ErrorMessages.TokenHasNotUserId});
+            return errorResult;
         }
 
-        var validInt = int.TryParse(userId, out var userIdInt);
-
-        if (!validInt)
-        {
-            return BadRequest(new {error = ErrorMessages.TokenInvalidUserId});
-        }
-
-        var existingUser = await userService.GetByIdAsync(userIdInt);
-
-        if (existingUser == null)
-        {
-            return BadRequest(new {error = ErrorMessages.TokenInvalidUser}); 
-        }
+        var userIdInt = userResult as int? ?? 0;
 
         var threads = await threadService.GetAllByUserIdAsync(userIdInt);
         
         var response = threads.MapToResponse();
         
         return Ok(response);
+    }
+    
+    private async Task<object> GetValidatedUserIdAsync()
+    {
+        var userId = HttpContext.GetUserId();
+
+        if (userId == null)
+        {
+            return BadRequest(new { error = ErrorMessages.TokenHasNotUserId });
+        }
+
+        var validInt = int.TryParse(userId, out var userIdInt);
+        if (!validInt)
+        {
+            return BadRequest(new { error = ErrorMessages.TokenInvalidUserId });
+        }
+
+        var existingUser = await userService.GetByIdAsync(userIdInt);
+        if (existingUser == null)
+        {
+            return BadRequest(new { error = ErrorMessages.TokenInvalidUser });
+        }
+
+        return userIdInt;
     }
 }
