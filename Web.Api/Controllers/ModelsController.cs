@@ -26,8 +26,7 @@ public class ModelsController(IModelService modelService, IModelTypeService mode
         var model = request.MapToModel();
         await modelService.CreateAsync(model);
         var modelResponse = model.MapToResponse();
-        return Created();
-        //TODO return CreatedAtAction(nameof(GetModelType), new { id = modelType.Id }, modelTypeResponse);
+        return CreatedAtAction(nameof(Get), new { id = model.Id }, modelResponse);
     }
 
     [HttpGet(ApiEndpoints.Models.GetAll)]
