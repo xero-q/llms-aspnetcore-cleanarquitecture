@@ -10,6 +10,7 @@ namespace Web.Api.Controllers;
 [ApiController]
 public class ThreadsController(IThreadService threadService, IUserService userService):ControllerBase
 {
+    
     [HttpPost(ApiEndpoints.Threads.Create)]
     [Authorize]
     public async Task<IActionResult> Create([FromBody] CreateThreadRequest request)
@@ -47,5 +48,37 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
         var response = thread.MapToResponse();
 
         return Created();
+    }
+    
+    [HttpGet(ApiEndpoints.Threads.GetAll)]
+    [Authorize]
+    public async Task<IActionResult> GetThreads()
+    {
+        var userId = HttpContext.GetUserId();
+        
+        if (userId == null)
+        {
+            return BadRequest(new {error=ErrorMessages.TokenHasNotUserId});
+        }
+
+        var validInt = int.TryParse(userId, out var userIdInt);
+
+        if (!validInt)
+        {
+            return BadRequest(new {error = ErrorMessages.TokenInvalidUserId});
+        }
+
+        var existingUser = await userService.GetByIdAsync(userIdInt);
+
+        if (existingUser == null)
+        {
+            return BadRequest(new {error = ErrorMessages.TokenInvalidUser}); 
+        }
+
+        var threads = await threadService.GetAllByUserIdAsync(userIdInt);
+        
+        var response = threads.MapToResponse();
+        
+        return Ok(response);
     }
 }

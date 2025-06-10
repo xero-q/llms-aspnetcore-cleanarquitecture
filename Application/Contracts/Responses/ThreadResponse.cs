@@ -1,4 +1,4 @@
-namespace Application.Contracts.Requests;
+namespace Application.Contracts.Responses;
 
 public sealed class ThreadResponse
 {

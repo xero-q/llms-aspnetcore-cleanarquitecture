@@ -104,4 +104,12 @@ public static class ContractMappings
         };
     }
     
+    public static ThreadsResponse MapToResponse(this IEnumerable<Thread> threads)
+    {
+        return new ThreadsResponse
+        {
+            Items = threads.Select(MapToResponse)
+        };
+    }
+    
 }

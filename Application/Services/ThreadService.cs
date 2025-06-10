@@ -17,4 +17,9 @@ public class ThreadService(IThreadRepository threadRepository,IValidator<Thread>
     {
         return await threadRepository.TitleExistsAsync(title);
     }
+
+    public async Task<IEnumerable<Thread>> GetAllByUserIdAsync(int userId)
+    {
+        return await threadRepository.GetAllByUserIdAsync(userId);
+    }
 }

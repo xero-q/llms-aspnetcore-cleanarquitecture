@@ -11,4 +11,9 @@ public class ThreadRepository(LLMDbContext context):GenericRepositoryAsync<Threa
     {
         return await context.Threads.AnyAsync(t => t.Title == title);
     }
+
+    public async Task<IEnumerable<Thread>> GetAllByUserIdAsync(int userId)
+    {
+        return await context.Threads.Where(t => t.UserId == userId).AsNoTracking().ToListAsync();
+    }
 }

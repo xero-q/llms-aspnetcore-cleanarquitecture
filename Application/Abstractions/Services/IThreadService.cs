@@ -7,4 +7,6 @@ public interface IThreadService
     Task<bool> CreateAsync(Thread model);
     
     Task<bool> TitleExistsAsync(string title);
+    
+    Task<IEnumerable<Thread>> GetAllByUserIdAsync(int userId);
 }
