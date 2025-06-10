@@ -8,10 +8,6 @@ public sealed class ModelResponse
     
     public required string Identifier { get; init; }
 
-    public required double Temperature { get; init; }
-    
-    public required string EnvironmentVariable { get; init; }
-    
-    public required int ModelTypeId { get; init; }
+    public required string ModelType { get; init; }
 
 }

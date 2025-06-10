@@ -69,9 +69,7 @@ public static class ContractMappings
             Id = model.Id,
             Name = model.Name,
             Identifier = model.Identifier,
-            Temperature = model.Temperature,
-            ModelTypeId = model.ModelTypeId,
-            EnvironmentVariable = model.EnvironmentVariable
+            ModelType = model.Provider.Name
         };
     }
     
@@ -99,16 +97,36 @@ public static class ContractMappings
         {
             Title = thread.Title,
             ModelId = thread.ModelId,
-            UserId = thread.UserId,
             CreatedAt = thread.CreatedAt,
+            CreatedAtDate = thread.CreatedAt.Date,
+            ModelName = thread.Model.Name,
+            ModelType = thread.Model.Provider.Name,
+            ModelIdentifier = thread.Model.Identifier
         };
     }
     
-    public static ThreadsResponse MapToResponse(this IEnumerable<Thread> threads)
+    public static ThreadSimpleResponse MapToSimpleResponse(this Thread thread)
     {
-        return new ThreadsResponse
+        return new ThreadSimpleResponse
         {
-            Items = threads.Select(MapToResponse)
+            Title = thread.Title,
+            ModelId = thread.ModelId,
+            CreatedAt = thread.CreatedAt
+        };
+    }
+    
+    
+    public static PaginatedThreadsResponse MapToResponse(this Dictionary<string, List<Thread>> threads, int currentPage, bool hasNext)
+    {
+       return new PaginatedThreadsResponse
+        {
+            CurrentPage = currentPage,
+            HasNext = hasNext,
+            Results = threads.Select(x=>new ThreadsResponse
+            {
+                Date = x.Key,
+                Threads = x.Value.Select(MapToResponse)
+            })
         };
     }
     

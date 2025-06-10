@@ -12,8 +12,25 @@ public class ThreadRepository(LLMDbContext context):GenericRepositoryAsync<Threa
         return await context.Threads.AnyAsync(t => t.Title == title);
     }
 
-    public async Task<IEnumerable<Thread>> GetAllByUserIdAsync(int userId)
+    public async Task<IEnumerable<Thread>> GetAllByUserIdAsync(int userId, int pageNumber = 1, int pageSize = 20)
     {
-        return await context.Threads.Where(t => t.UserId == userId).AsNoTracking().ToListAsync();
+        return await context.Threads
+            .Include(t => t.Model)
+            .ThenInclude(m => m.Provider)
+            .Where(t => t.UserId == userId)
+            .OrderByDescending(t => t.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
+    public async Task<int> GetTotalThreadsCount(int userId)
+    {
+        var query = context.Threads
+            .Where(t => t.UserId == userId)
+            .AsNoTracking();
+
+        return await query.CountAsync();
     }
 }

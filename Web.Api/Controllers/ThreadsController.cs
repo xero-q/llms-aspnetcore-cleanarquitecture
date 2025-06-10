@@ -32,14 +32,14 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
         
         var thread = request.MapToThread(userIdInt);
         await threadService.CreateAsync(thread);
-        var response = thread.MapToResponse();
+        var response = thread.MapToSimpleResponse();
 
         return Created();
     }
     
     [HttpGet(ApiEndpoints.Threads.GetAll)]
     [Authorize]
-    public async Task<IActionResult> GetThreads()
+    public async Task<IActionResult> GetThreads([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {
         var userResult = await GetValidatedUserIdAsync();
         if (userResult is IActionResult errorResult)
@@ -48,10 +48,14 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
         }
 
         var userIdInt = userResult as int? ?? 0;
-
-        var threads = await threadService.GetAllByUserIdAsync(userIdInt);
         
-        var response = threads.MapToResponse();
+        var totalThreads = await threadService.GetTotalThreadsCount(userIdInt);
+        
+        bool hasMorePages = page * pageSize < totalThreads;
+
+        var threads = await threadService.GetAllByUserIdGroupedByDateAsync(userIdInt, page, pageSize);
+
+        var response = threads.MapToResponse(page, hasMorePages);
         
         return Ok(response);
     }

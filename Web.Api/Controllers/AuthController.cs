@@ -27,7 +27,7 @@ public class AuthController(IAuthenticationService authenticationService) : Cont
 
         var response = new LoginResponse
         {
-            Token = token,
+            Access = token,
         };
             
         return Ok(response);

@@ -32,6 +32,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseMiddleware<ValidationMappingMiddleware>();
+app.UseCors("AllowFrontend");
+
 app.MapControllers();
 
 app.Run();

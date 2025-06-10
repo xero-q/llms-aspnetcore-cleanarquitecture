@@ -31,10 +31,27 @@ public class ModelsController(IModelService modelService, IModelTypeService mode
     }
 
     [HttpGet(ApiEndpoints.Models.GetAll)]
+    [Authorize]
     public async Task<IActionResult> GetAll()
     {
         var models = await modelService.GetAllAsync();
-        var response = models.MapToResponse();
+        var response = models.MapToResponse().Items;
+        
+        return Ok(response);
+    }
+    
+    [HttpGet(ApiEndpoints.Models.Get)]
+    [Authorize]
+    public async Task<IActionResult> Get([FromRoute] int id)
+    {
+        var model = await modelService.GetByIdAsync(id);
+
+        if (model == null)
+        {
+            return NotFound();
+        }
+        
+        var response = model.MapToResponse();
         
         return Ok(response);
     }

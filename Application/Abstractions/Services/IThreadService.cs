@@ -9,4 +9,8 @@ public interface IThreadService
     Task<bool> TitleExistsAsync(string title);
     
     Task<IEnumerable<Thread>> GetAllByUserIdAsync(int userId);
+
+    Task<Dictionary<string, List<Thread>>> GetAllByUserIdGroupedByDateAsync(int userId, int pageNumber = 1, int pageSize = 20);
+
+    Task<int> GetTotalThreadsCount(int userId);
 }

@@ -22,4 +22,18 @@ public class ThreadService(IThreadRepository threadRepository,IValidator<Thread>
     {
         return await threadRepository.GetAllByUserIdAsync(userId);
     }
+    
+    public async Task<Dictionary<string, List<Thread>>> GetAllByUserIdGroupedByDateAsync(int userId,int pageNumber = 1, int pageSize = 20)
+    {
+        var threads = await threadRepository.GetAllByUserIdAsync(userId, pageNumber, pageSize);
+
+        return threads
+            .GroupBy(t => t.CreatedAt.Date.ToString("yyyy-MM-dd")) 
+            .ToDictionary(g => g.Key, g => g.ToList());
+    }
+
+    public async Task<int> GetTotalThreadsCount(int userId)
+    {
+        return await threadRepository.GetTotalThreadsCount(userId);
+    }
 }
