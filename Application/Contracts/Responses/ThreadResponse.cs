@@ -6,7 +6,7 @@ public sealed class ThreadResponse
     
     public required DateTime CreatedAt { get; set; }
     
-    public required DateTime CreatedAtDate { get; set; }
+    public required string CreatedAtDate { get; set; }
     
     public required int ModelId { get; init; }
     

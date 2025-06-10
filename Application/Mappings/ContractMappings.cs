@@ -98,7 +98,7 @@ public static class ContractMappings
             Title = thread.Title,
             ModelId = thread.ModelId,
             CreatedAt = thread.CreatedAt,
-            CreatedAtDate = thread.CreatedAt.Date,
+            CreatedAtDate = thread.CreatedAt.ToString("yyyy-MM-dd"),
             ModelName = thread.Model.Name,
             ModelType = thread.Model.Provider.Name,
             ModelIdentifier = thread.Model.Identifier
