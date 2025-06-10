@@ -18,6 +18,10 @@ public class ThreadConfiguration:IEntityTypeConfiguration<Thread>
         
         builder.Property(t => t.CreatedAt).HasColumnName("created_at").IsRequired();
         
+        builder.Property(t => t.ModelId).HasColumnName("model_id").IsRequired();
+        
+        builder.Property(t => t.UserId).HasColumnName("user_id").IsRequired();
+        
         builder.HasOne(t=>t.Model).WithMany(t => t.Threads).HasForeignKey(t=>t.ModelId).IsRequired();
         
         builder.HasOne(t=>t.User).WithMany(u => u.Threads).HasForeignKey(t=>t.UserId).IsRequired();

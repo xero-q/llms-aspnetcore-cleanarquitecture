@@ -1,6 +1,6 @@
 using Application.Contracts.Requests;
 using Application.Contracts.Responses;
-using Application.Services;
+using Application.Abstractions.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Web.Api.Controllers;
@@ -18,7 +18,12 @@ public class AuthController(IAuthenticationService authenticationService) : Cont
             return Unauthorized();
         }
         
-        var token = authenticationService.GenerateToken(request.Username);
+        var token = await authenticationService.GenerateToken(request.Username);
+
+        if (token == null)
+        {
+            return BadRequest();
+        }
 
         var response = new LoginResponse
         {

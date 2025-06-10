@@ -1,6 +1,6 @@
 using Application.Contracts.Requests;
 using Application.Mappings;
-using Application.Services;
+using Application.Abstractions.Services;
 using SharedKernel;
 using Microsoft.AspNetCore.Mvc;
 

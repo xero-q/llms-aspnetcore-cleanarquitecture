@@ -1,4 +1,5 @@
 using Application.Abstractions.Repositories;
+using Application.Abstractions.Services;
 using Application.Helpers;
 using Domain.Entities;
 using FluentValidation;
@@ -28,5 +29,10 @@ public class UserService(IUserRepository userRepository, IValidator<User> valida
     public async Task<User?> GetByUsernameAsync(string username)
     {
         return await userRepository.GetByUsernameAsync(username);
+    }
+
+    public async Task<User?> GetByIdAsync(int id)
+    {
+        return await userRepository.GetByIdAsync(id);
     }
 }

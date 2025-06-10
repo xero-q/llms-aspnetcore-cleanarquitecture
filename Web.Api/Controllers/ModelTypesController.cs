@@ -1,6 +1,6 @@
 using Application.Contracts.Requests;
 using Application.Mappings;
-using Application.Services;
+using Application.Abstractions.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 

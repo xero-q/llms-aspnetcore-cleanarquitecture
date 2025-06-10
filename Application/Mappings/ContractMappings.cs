@@ -1,6 +1,7 @@
 using Application.Contracts.Requests;
 using Application.Contracts.Responses;
 using Domain.Entities;
+using Thread = Domain.Entities.Thread;
 
 namespace Application.Mappings;
 
@@ -79,6 +80,27 @@ public static class ContractMappings
         return new ModelsResponse
         {
             Items = models.Select(MapToResponse)
+        };
+    }
+
+    public static Thread MapToThread(this CreateThreadRequest request,int userId)
+    {
+        return new Thread
+        {
+            Title = request.Title,
+            ModelId = request.ModelId,
+            UserId = userId
+        };
+    }
+
+    public static ThreadResponse MapToResponse(this Thread thread)
+    {
+        return new ThreadResponse
+        {
+            Title = thread.Title,
+            ModelId = thread.ModelId,
+            UserId = thread.UserId,
+            CreatedAt = thread.CreatedAt,
         };
     }
     

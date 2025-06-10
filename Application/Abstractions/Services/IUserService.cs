@@ -1,6 +1,6 @@
 using Domain.Entities;
 
-namespace Application.Services;
+namespace Application.Abstractions.Services;
 
 public interface IUserService
 {
@@ -9,4 +9,6 @@ public interface IUserService
     Task<bool> UsernameExistsAsync(string username);
 
     Task<User?> GetByUsernameAsync(string username);
+    
+    Task<User?> GetByIdAsync(int id);
 }

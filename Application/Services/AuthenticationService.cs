@@ -1,7 +1,7 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using Application.Abstractions.Repositories;
+using Application.Abstractions.Services;
 using Application.Contracts.Requests;
 using Application.Helpers;
 using Microsoft.Extensions.Configuration;
@@ -23,15 +23,23 @@ public class AuthenticationService(IConfiguration config, IUserService userServi
         return PasswordHelper.VerifyPassword(request.Password, user.Password);
     }
     
-    public string GenerateToken(string username)
+    public async Task<string?> GenerateToken(string username)
     {
+        var user = await userService.GetByUsernameAsync(username);
+
+        if (user == null)
+        {
+            return null;
+        }
+        
         var jwtConfig = config.GetSection("Jwt");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         var claims = new[]
         {
-            new Claim(ClaimTypes.Name, username)
+            new Claim(ClaimTypes.Name, username),
+            new Claim("userId",user.Id.ToString())
         };
 
         var token = new JwtSecurityToken(

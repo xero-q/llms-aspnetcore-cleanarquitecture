@@ -1,4 +1,5 @@
 using Application.Services;
+using Application.Abstractions.Services;
 using Domain.Validators;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,6 +14,7 @@ public static class DependencyInjection
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<IModelTypeService, ModelTypeService>();
         services.AddScoped<IModelService, ModelService>();
+        services.AddScoped<IThreadService, ThreadService>();
         services.AddValidatorsFromAssemblyContaining<UserValidator>();
         
         return services;

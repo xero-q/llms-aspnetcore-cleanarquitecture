@@ -40,6 +40,7 @@ public static class DependencyInjection
         services.AddScoped<IModelTypeRepository, ModelTypeRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IModelRepository, ModelRepository>();
+        services.AddScoped<IThreadRepository, ThreadRepository>();
        
         return services;
     } 

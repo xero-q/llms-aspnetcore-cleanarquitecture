@@ -8,4 +8,9 @@ public static class ErrorMessages
     public const string PasswordNotEmpty = "Password can not be empty.";
     public const string TemperatureBetweenZeroOne = "Temperature must be between 0 and 1.";
     public const string ModelTypeNotFound = "Model type not found.";
+    public const string ThreadTitleNotEmpty = "Thread's title can not be empty.";
+    public const string TokenHasNotUserId = "Token has not UserId.";
+    public const string TokenInvalidUserId = "Token has an invalid UserId";
+    public const string TokenInvalidUser = "Password has an invalid Password";
+    public const string ThreadSameTitleExists = "Thread's title already exists.";
 }
