@@ -9,7 +9,7 @@ namespace Web.Api.Controllers;
 [ApiController]
 public class UsersController(IUserService userService) : ControllerBase
 {
-    [HttpPost(ApiEndpoints.Users.Create)]
+    [HttpPost(ApiEndpoints.Auth.Signup)]
     public async Task<IActionResult> RegisterUser([FromBody] CreateUserRequest request)
     {
         if (await userService.UsernameExistsAsync(request.Username))

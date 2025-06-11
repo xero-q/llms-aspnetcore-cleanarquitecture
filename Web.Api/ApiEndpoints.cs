@@ -42,6 +42,7 @@ public static class ApiEndpoints
         private const string Base = $"{ApiBase}/auth";
 
         public const string Login = $"{Base}/login";
+        public const string Signup = $"{Base}/signup";
 
     }
     
