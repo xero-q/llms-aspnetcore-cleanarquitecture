@@ -2,6 +2,8 @@ namespace Application.Contracts.Responses;
 
 public sealed class ThreadResponse
 {
+    public required int Id { get; set; }
+    
     public required string Title { get; init; }
     
     public required DateTime CreatedAt { get; set; }

@@ -47,7 +47,18 @@ public static class ApiEndpoints
     
     public static class Threads
     {
-        private const string Base = $"{ApiBase}/threads";
+        public const string Base = $"{ApiBase}/threads";
+
+        public const string Create = Base;
+        public const string Get = $"{Base}/{{id:int}}";
+        public const string GetAll = Base;
+        public const string Update = $"{Base}/{{id:int}}";
+        public const string Delete = $"{Base}/{{id:int}}";
+    }
+    
+    public static class Prompts
+    {
+        private const string Base = $"{Threads.Get}/prompts";
 
         public const string Create = Base;
         public const string Get = $"{Base}/{{id:int}}";

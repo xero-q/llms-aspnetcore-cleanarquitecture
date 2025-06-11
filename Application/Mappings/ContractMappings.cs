@@ -95,6 +95,7 @@ public static class ContractMappings
     {
         return new ThreadResponse
         {
+            Id = thread.Id,
             Title = thread.Title,
             ModelId = thread.ModelId,
             CreatedAt = thread.CreatedAt,
@@ -109,6 +110,7 @@ public static class ContractMappings
     {
         return new ThreadSimpleResponse
         {
+            Id = thread.Id,
             Title = thread.Title,
             ModelId = thread.ModelId,
             CreatedAt = thread.CreatedAt
@@ -127,6 +129,26 @@ public static class ContractMappings
                 Date = x.Key,
                 Threads = x.Value.Select(MapToResponse)
             })
+        };
+    }
+
+    public static PromptResponse MapToResponse(this Prompt prompt)
+    {
+        return new PromptResponse
+        {
+            Id = prompt.Id,
+            Prompt = prompt.PromptText,
+            Response = prompt.Response,
+            ThreadId = prompt.ThreadId,
+            CreateAt = prompt.CreatedAt
+        };
+    }
+    
+    public static PromptsResponse MapToResponse(this IEnumerable<Prompt> prompts)
+    {
+        return new PromptsResponse
+        {
+            Items = prompts.Select(MapToResponse)
         };
     }
     

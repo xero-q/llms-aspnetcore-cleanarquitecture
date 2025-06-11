@@ -15,6 +15,7 @@ public static class DependencyInjection
         services.AddScoped<IModelTypeService, ModelTypeService>();
         services.AddScoped<IModelService, ModelService>();
         services.AddScoped<IThreadService, ThreadService>();
+        services.AddScoped<IPromptService, PromptService>();
         services.AddValidatorsFromAssemblyContaining<UserValidator>();
         
         return services;

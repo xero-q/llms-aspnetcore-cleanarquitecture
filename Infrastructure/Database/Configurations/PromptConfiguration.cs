@@ -19,6 +19,9 @@ public class PromptConfiguration:IEntityTypeConfiguration<Prompt>
         
         builder.Property(p => p.CreatedAt).HasColumnName("created_at").IsRequired();
         
+        builder.Property(p => p.ThreadId).HasColumnName("thread_id").IsRequired();
+
+        
         builder.HasOne(p=>p.Thread).WithMany(t => t.Prompts).HasForeignKey(t=>t.ThreadId).IsRequired();
     }
 }
