@@ -28,9 +28,9 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
             return errorResult;
         }
 
-        var userIdInt = userResult as int? ?? 0;
+        var userId = userResult as int? ?? 0;
         
-        var thread = request.MapToThread(id, userIdInt);
+        var thread = request.MapToThread(id, userId);
         await threadService.CreateAsync(thread);
         var response = thread.MapToSimpleResponse();
 
@@ -47,13 +47,13 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
             return errorResult;
         }
 
-        var userIdInt = userResult as int? ?? 0;
+        var userId = userResult as int? ?? 0;
         
-        var totalThreads = await threadService.GetTotalThreadsCount(userIdInt);
+        var totalThreads = await threadService.GetTotalThreadsCount(userId);
         
         bool hasMorePages = page * pageSize < totalThreads;
 
-        var threads = await threadService.GetAllByUserIdGroupedByDateAsync(userIdInt, page, pageSize);
+        var threads = await threadService.GetAllByUserIdGroupedByDateAsync(userId, page, pageSize);
 
         var response = threads.MapToResponse(page, hasMorePages);
         
@@ -69,8 +69,8 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
             return BadRequest(new { error = ErrorMessages.TokenHasNotUserId });
         }
 
-        var validInt = int.TryParse(userId, out var userIdInt);
-        if (!validInt)
+        var isValidInt = int.TryParse(userId, out var userIdInt);
+        if (!isValidInt)
         {
             return BadRequest(new { error = ErrorMessages.TokenInvalidUserId });
         }
