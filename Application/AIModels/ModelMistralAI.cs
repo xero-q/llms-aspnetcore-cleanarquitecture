@@ -12,7 +12,7 @@ public class ModelMistralAI(Thread thread) :ModelAI(thread)
     {
         Env.Load();
 
-        var apiKeyName = thread.Model.EnvironmentVariable;
+        string apiKeyName = thread.Model.EnvironmentVariable;
         
         string? apiKey = Environment.GetEnvironmentVariable(apiKeyName);
 
@@ -21,13 +21,13 @@ public class ModelMistralAI(Thread thread) :ModelAI(thread)
             return null;
         }
         
-        var url = "https://api.mistral.ai/v1/chat/completions";
+        string url = "https://api.mistral.ai/v1/chat/completions";
 
-        var modelIdentifier = thread.Model.Identifier;
+        string modelIdentifier = thread.Model.Identifier;
 
         var requestJson = $@"
         {{
-            ""model"": ""{modelIdentifier}"",
+            ""model"": ""{JsonHelper.EscapeJsonString(modelIdentifier)}"",
             ""messages"": [
                 {{ ""role"": ""system"", ""content"": ""You are a helpful assistant."" }},
                 {{ ""role"": ""user"", ""content"": ""{JsonHelper.EscapeJsonString(prompt)}"" }}
@@ -45,19 +45,18 @@ public class ModelMistralAI(Thread thread) :ModelAI(thread)
 
         if (response.IsSuccessStatusCode)
         {
-            
-        var responseBody = await response.Content.ReadAsStringAsync();
+            var responseBody = await response.Content.ReadAsStringAsync();
 
-        using var document = JsonDocument.Parse(responseBody);
-        var root = document.RootElement;
+            using var document = JsonDocument.Parse(responseBody);
+            var root = document.RootElement;
 
-        var text = root
-            .GetProperty("choices")[0]
-            .GetProperty("message")
-            .GetProperty("content")
-            .GetString();
+            var text = root
+                .GetProperty("choices")[0]
+                .GetProperty("message")
+                .GetProperty("content")
+                .GetString();
 
-        return text;
+            return text;
         }
 
         return null;
