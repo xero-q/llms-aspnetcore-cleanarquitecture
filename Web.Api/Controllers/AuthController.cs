@@ -2,6 +2,7 @@ using Application.Contracts.Requests;
 using Application.Contracts.Responses;
 using Application.Abstractions.Services;
 using Microsoft.AspNetCore.Mvc;
+using SharedKernel;
 
 namespace Web.Api.Controllers;
 
@@ -15,14 +16,14 @@ public class AuthController(IAuthenticationService authenticationService) : Cont
 
         if (!userPasswordCorrect)
         {
-            return Unauthorized();
+            return Unauthorized(new {error = ErrorMessages.UsernamePasswordInvalid});
         }
         
         var token = await authenticationService.GenerateToken(request.Username);
 
         if (token == null)
         {
-            return BadRequest();
+            return BadRequest(new {error=ErrorMessages.TokenNotGenerated});
         }
 
         var response = new LoginResponse

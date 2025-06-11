@@ -81,17 +81,17 @@ public static class ContractMappings
         };
     }
 
-    public static Thread MapToThread(this CreateThreadRequest request,int userId)
+    public static Thread MapToThread(this CreateThreadRequest request,int modelId, int userId)
     {
         return new Thread
         {
             Title = request.Title,
-            ModelId = request.ModelId,
+            ModelId = modelId,
             UserId = userId
         };
     }
 
-    public static ThreadResponse MapToResponse(this Thread thread)
+    private static ThreadResponse MapToResponse(this Thread thread)
     {
         return new ThreadResponse
         {

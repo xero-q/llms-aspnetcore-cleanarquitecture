@@ -47,9 +47,9 @@ public static class ApiEndpoints
     
     public static class Threads
     {
-        public const string Base = $"{ApiBase}/threads";
+        private const string Base = $"{ApiBase}/threads";
 
-        public const string Create = Base;
+        public const string Create = $"{Models.Get}/threads";
         public const string Get = $"{Base}/{{id:int}}";
         public const string GetAll = Base;
         public const string Update = $"{Base}/{{id:int}}";

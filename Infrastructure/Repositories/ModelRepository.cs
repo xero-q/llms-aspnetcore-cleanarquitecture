@@ -11,4 +11,9 @@ public class ModelRepository(LLMDbContext context) : GenericRepositoryAsync<Mode
     {
         return await context.Models.Include(m=>m.Provider).AsNoTracking().ToListAsync();
     }
+
+    public override async Task<Model?> GetByIdAsync(int id)
+    {
+        return await context.Models.Include(m=>m.Provider).FirstOrDefaultAsync(m => m.Id == id);;
+    }
 }

@@ -13,4 +13,6 @@ public static class ErrorMessages
     public const string TokenInvalidUserId = "Token has an invalid UserId";
     public const string TokenInvalidUser = "Password has an invalid Password";
     public const string ThreadSameTitleExists = "Thread's title already exists.";
+    public const string UsernamePasswordInvalid = "Username and password do not match.";
+    public const string TokenNotGenerated = "Token could not be generated.";
 }

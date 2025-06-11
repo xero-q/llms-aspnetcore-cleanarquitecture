@@ -13,7 +13,7 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
     
     [HttpPost(ApiEndpoints.Threads.Create)]
     [Authorize]
-    public async Task<IActionResult> Create([FromBody] CreateThreadRequest request)
+    public async Task<IActionResult> Create([FromRoute] int id,[FromBody] CreateThreadRequest request)
     {
         var threadExists = await threadService.TitleExistsAsync(request.Title);
 
@@ -30,7 +30,7 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
 
         var userIdInt = userResult as int? ?? 0;
         
-        var thread = request.MapToThread(userIdInt);
+        var thread = request.MapToThread(id, userIdInt);
         await threadService.CreateAsync(thread);
         var response = thread.MapToSimpleResponse();
 
