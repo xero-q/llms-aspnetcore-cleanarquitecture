@@ -13,4 +13,6 @@ public interface IThreadService
     Task<Dictionary<string, List<Thread>>> GetAllByUserIdGroupedByDateAsync(int userId, int pageNumber = 1, int pageSize = 20);
 
     Task<int> GetTotalThreadsCount(int userId);
+
+    Task<Thread?> GetByIdAsyncWithJoins(int threadId);
 }

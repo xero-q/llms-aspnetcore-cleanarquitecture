@@ -33,4 +33,14 @@ public class ThreadRepository(LLMDbContext context):GenericRepositoryAsync<Threa
 
         return await query.CountAsync();
     }
+
+    public async Task<Thread?> GetByIdAsync(int threadId, bool includeJoins = false)
+    {
+        if (includeJoins)
+        {
+            return  await context.Threads.Include(t => t.Model).ThenInclude(m => m.Provider).FirstOrDefaultAsync(t => t.Id == threadId);
+        }
+
+        return await context.Threads.FindAsync(threadId);
+    }
 }

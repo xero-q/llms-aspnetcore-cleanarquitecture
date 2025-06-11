@@ -36,4 +36,9 @@ public class ThreadService(IThreadRepository threadRepository,IValidator<Thread>
     {
         return await threadRepository.GetTotalThreadsCount(userId);
     }
+
+    public async Task<Thread?> GetByIdAsyncWithJoins(int threadId)
+    {
+        return await threadRepository.GetByIdAsync(threadId, true);
+    }
 }

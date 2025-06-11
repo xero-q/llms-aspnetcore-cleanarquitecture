@@ -8,4 +8,6 @@ public interface IThreadRepository:IGenericRepositoryAsync<Thread>
     Task<IEnumerable<Thread>> GetAllByUserIdAsync(int userId, int pageNumber = 1, int pageSize = 20);
     
     Task<int> GetTotalThreadsCount(int userId);
+    
+    Task<Thread?> GetByIdAsync(int threadId, bool includeJoins = false);
 }
