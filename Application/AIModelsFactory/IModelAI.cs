@@ -1,4 +1,4 @@
-namespace Application.AIModels;
+namespace Application.AIModelsFactory;
 
 public interface IModelAI
 {

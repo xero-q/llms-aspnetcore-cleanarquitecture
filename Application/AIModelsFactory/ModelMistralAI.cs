@@ -1,26 +1,27 @@
 using System.Text;
-using System.Text.Json;
 using Application.Helpers;
 using DotNetEnv;
+using Newtonsoft.Json.Linq;
+using SharedKernel;
 using Thread = Domain.Entities.Thread;
 
-namespace Application.AIModels;
+namespace Application.AIModelsFactory;
 
-public class ModelMistralAI(Thread thread) :ModelAI(thread)
+public class ModelMistralAI(Thread thread) : ModelAI(thread)
 {
-    public override async Task<string> SendPrompt(string prompt)
+    public override async Task<string?> SendPrompt(string prompt)
     {
         Env.Load();
 
         string apiKeyName = thread.Model.EnvironmentVariable;
-        
+
         string? apiKey = Environment.GetEnvironmentVariable(apiKeyName);
 
         if (apiKey == null)
         {
             return null;
         }
-        
+
         string url = "https://api.mistral.ai/v1/chat/completions";
 
         string modelIdentifier = thread.Model.Identifier;
@@ -37,28 +38,33 @@ public class ModelMistralAI(Thread thread) :ModelAI(thread)
 
         using var httpClient = new HttpClient();
 
-        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
+        httpClient.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
 
         var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
 
-        var response = await httpClient.PostAsync(url, content);
-
-        if (response.IsSuccessStatusCode)
+        try
         {
+            var response = await httpClient.PostAsync(url, content);
+
+            response.EnsureSuccessStatusCode();
+
             var responseBody = await response.Content.ReadAsStringAsync();
+            
+            JObject responseJson = JObject.Parse(responseBody);
 
-            using var document = JsonDocument.Parse(responseBody);
-            var root = document.RootElement;
+            if (responseJson != null)
+            {
+                var text = (string)(responseJson["choices"][0]["message"]["content"]);
 
-            var text = root
-                .GetProperty("choices")[0]
-                .GetProperty("message")
-                .GetProperty("content")
-                .GetString();
+                return text;    
+            }
 
-            return text;
+            return null;
         }
-
-        return null;
+        catch (Exception ex)
+        {
+            throw new Exception($"{ErrorMessages.ErrorRequestLLM}: {ex.Message}");
+        }
     }
 }

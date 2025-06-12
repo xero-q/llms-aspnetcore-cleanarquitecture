@@ -1,5 +1,5 @@
 using Thread = Domain.Entities.Thread;
-namespace Application.AIModels;
+namespace Application.AIModelsFactory;
 
 public class MistralFactory:IModelAIFactory
 {

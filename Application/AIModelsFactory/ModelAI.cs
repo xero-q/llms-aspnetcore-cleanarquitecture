@@ -1,8 +1,8 @@
 using Thread = Domain.Entities.Thread;
-namespace Application.AIModels;
+namespace Application.AIModelsFactory;
 
 public abstract class ModelAI(Thread thread):IModelAI
 {
-    public abstract Task<string> SendPrompt(string prompt);
+    public abstract Task<string?> SendPrompt(string prompt);
   
 }

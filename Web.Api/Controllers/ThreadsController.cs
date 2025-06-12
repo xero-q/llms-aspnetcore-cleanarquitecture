@@ -15,13 +15,6 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
     [Authorize]
     public async Task<IActionResult> Create([FromRoute] int id,[FromBody] CreateThreadRequest request)
     {
-        var threadExists = await threadService.TitleExistsAsync(request.Title);
-
-        if (threadExists)
-        {
-            return BadRequest(new {error = ErrorMessages.ThreadSameTitleExists});
-        }
-        
         var userResult = await GetValidatedUserIdAsync();
         if (userResult is IActionResult errorResult)
         {
@@ -29,6 +22,13 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
         }
 
         var userId = userResult as int? ?? 0;
+        
+        var threadExists = await threadService.TitleExistsAsync(userId, request.Title);
+
+        if (threadExists)
+        {
+            return BadRequest(new {error = ErrorMessages.ThreadSameTitleExists});
+        }
         
         var thread = request.MapToThread(id, userId);
         await threadService.CreateAsync(thread);

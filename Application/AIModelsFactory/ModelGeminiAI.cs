@@ -1,9 +1,15 @@
+using System.Runtime.InteropServices.JavaScript;
 using System.Text;
 using System.Text.Json;
 using Application.Helpers;
 using Thread = Domain.Entities.Thread;
 using DotNetEnv;
-namespace Application.AIModels;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using SharedKernel;
+
+namespace Application.AIModelsFactory;
+
 public class ModelGeminiAI(Thread thread) :ModelAI(thread)
 {
     public override async Task<string?> SendPrompt(string prompt)
@@ -39,25 +45,31 @@ public class ModelGeminiAI(Thread thread) :ModelAI(thread)
 
         var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
 
-        var response = await httpClient.PostAsync(url, content);
-
-        if (response.IsSuccessStatusCode)
+        try
         {
-            var responseBody = await response.Content.ReadAsStringAsync();
-        
-            using var document = JsonDocument.Parse(responseBody);
-            var root = document.RootElement;
+            var response = await httpClient.PostAsync(url, content);
 
-            var text = root
-                .GetProperty("candidates")[0]
-                .GetProperty("content")
-                .GetProperty("parts")[0]
-                .GetProperty("text")
-                .GetString();
+            response.EnsureSuccessStatusCode();
+            
+                var responseBody = await response.Content.ReadAsStringAsync();
 
-            return text;    
+                JObject responseJson = JObject.Parse(responseBody);
+
+                if (responseJson != null)
+                {
+                    var text = (string)(responseJson["candidates"][0]["content"]["parts"][0]["text"]);
+
+                    return text;    
+                }
+                
+                return null;
+                
+            
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"{ErrorMessages.ErrorRequestLLM}: {ex.Message}");
         }
         
-        return null;
     }
 }

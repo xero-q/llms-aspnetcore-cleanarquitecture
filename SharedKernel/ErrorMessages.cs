@@ -16,4 +16,5 @@ public static class ErrorMessages
     public const string UsernamePasswordInvalid = "Username and password do not match.";
     public const string TokenNotGenerated = "Token could not be generated.";
     public const string PromptNotCreated = "Could not create prompt.";
+    public const string ErrorRequestLLM = "Error while making request to LLM";
 }

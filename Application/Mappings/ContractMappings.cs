@@ -93,13 +93,20 @@ public static class ContractMappings
 
     private static ThreadResponse MapToResponse(this Thread thread)
     {
+        var createdAtLocal = TimeZoneInfo.ConvertTimeFromUtc(
+            thread.CreatedAt,
+            TimeZoneInfo.Local
+        );
+
+        var createdAtLocalDate = createdAtLocal.ToString("yyyy-MM-dd");
+        
         return new ThreadResponse
         {
             Id = thread.Id,
             Title = thread.Title,
             ModelId = thread.ModelId,
-            CreatedAt = thread.CreatedAt,
-            CreatedAtDate = thread.CreatedAt.ToString("yyyy-MM-dd"),
+            CreatedAt = createdAtLocal,
+            CreatedAtDate = createdAtLocalDate,
             ModelName = thread.Model.Name,
             ModelType = thread.Model.Provider.Name,
             ModelIdentifier = thread.Model.Identifier

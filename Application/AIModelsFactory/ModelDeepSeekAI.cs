@@ -1,9 +1,10 @@
 using System.Text;
-using System.Text.Json;
 using Application.Helpers;
+using Newtonsoft.Json.Linq;
+using SharedKernel;
 using Thread = Domain.Entities.Thread;
 
-namespace Application.AIModels;
+namespace Application.AIModelsFactory;
 
 public class ModelDeepSeekAI(Thread thread) :ModelAI(thread)
 {
@@ -33,26 +34,33 @@ public class ModelDeepSeekAI(Thread thread) :ModelAI(thread)
         using var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
         var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
-        
-        var response = await httpClient.PostAsync(url, content);
 
-        if (response.IsSuccessStatusCode)
+        try
         {
-        var responseBody = await response.Content.ReadAsStringAsync();
+            var response = await httpClient.PostAsync(url, content);
 
-        using var document = JsonDocument.Parse(responseBody);
-        var root = document.RootElement;
+            response.EnsureSuccessStatusCode();
+            {
+                var responseBody = await response.Content.ReadAsStringAsync();
 
-        var text = root
-            .GetProperty("choices")[0]
-            .GetProperty("message")
-            .GetProperty("content")
-            .GetString();
+                JObject responseJson = JObject.Parse(responseBody);
 
-        return text;
+                if (responseJson != null)
+                {
+                    var text = (string)(responseJson["choices"][0]["message"]["content"]);
+
+                    return text;    
+                }
+
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            throw new Exception($"{ErrorMessages.ErrorRequestLLM}: {ex.Message}");
         }
 
-        return null;
+        
         
     }
 }

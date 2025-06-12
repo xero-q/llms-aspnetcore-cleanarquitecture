@@ -1,6 +1,7 @@
 using Application.Abstractions.Services;
 using Application.Contracts.Requests;
 using Application.Mappings;
+using Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SharedKernel;
@@ -23,12 +24,23 @@ public class PromptsController(IPromptService promptService): ControllerBase
     [Authorize]
     public async Task<IActionResult> Create([FromRoute] int id, [FromBody] CreatePromptRequest request)
     {
-        var prompt = await promptService.AddPromptAsync(id, request.Prompt);
-
-        if (prompt == null)
+        Prompt? prompt;
+        
+        try
         {
-            return BadRequest(new {error=ErrorMessages.PromptNotCreated});
+            prompt = await promptService.AddPromptAsync(id, request.Prompt);
+
+            if (prompt == null)
+            {
+                return BadRequest(new { error = ErrorMessages.PromptNotCreated });
+            }
         }
+        catch (Exception ex)
+        {
+            return StatusCode(500, new {error = ex.Message});
+        }
+ 
+        
         var response = prompt.MapToResponse();
         return Created("",response);
     }

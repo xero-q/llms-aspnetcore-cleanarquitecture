@@ -13,9 +13,9 @@ public class ThreadService(IThreadRepository threadRepository,IValidator<Thread>
         return await threadRepository.CreateAsync(thread);
     }
 
-    public async Task<bool> TitleExistsAsync(string title)
+    public async Task<bool> TitleExistsAsync(int userId, string title)
     {
-        return await threadRepository.TitleExistsAsync(title);
+        return await threadRepository.TitleExistsAsync(userId, title);
     }
 
     public async Task<IEnumerable<Thread>> GetAllByUserIdAsync(int userId)
