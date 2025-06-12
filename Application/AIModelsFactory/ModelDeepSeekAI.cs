@@ -6,24 +6,26 @@ using Thread = Domain.Entities.Thread;
 
 namespace Application.AIModelsFactory;
 
-public class ModelDeepSeekAI(Thread thread) :ModelAI(thread)
+public class ModelDeepSeekAI(Thread thread) : ModelAI(thread)
 {
     public override async Task<string?> SendPrompt(string prompt)
     {
         string apiKeyName = thread.Model.EnvironmentVariable;
-        
+
         var apiKey = Environment.GetEnvironmentVariable(apiKeyName);
 
         if (apiKey == null)
         {
             return null;
         }
-        
+
         var url = "https://api.deepseek.com/chat/completions";
+
+        string modelIdentifier = thread.Model.Identifier;
 
         var requestJson = $@"
         {{
-            ""model"": ""deepseek-chat"",
+            ""model"": ""{JsonHelper.EscapeJsonString(modelIdentifier)}"",
             ""messages"": [
                 {{ ""role"": ""system"", ""content"": ""You are a helpful assistant."" }},
                 {{ ""role"": ""user"", ""content"": ""{JsonHelper.EscapeJsonString(prompt)}"" }}
@@ -32,7 +34,8 @@ public class ModelDeepSeekAI(Thread thread) :ModelAI(thread)
         }}";
 
         using var httpClient = new HttpClient();
-        httpClient.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
+        httpClient.DefaultRequestHeaders.Authorization =
+            new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
         var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
 
         try
@@ -45,22 +48,15 @@ public class ModelDeepSeekAI(Thread thread) :ModelAI(thread)
 
                 JObject responseJson = JObject.Parse(responseBody);
 
-                if (responseJson != null)
-                {
-                    var text = (string)(responseJson["choices"][0]["message"]["content"]);
 
-                    return text;    
-                }
+                var text = (string)(responseJson["choices"][0]["message"]["content"]);
 
-                return null;
+                return text;
             }
         }
         catch (Exception ex)
         {
             throw new Exception($"{ErrorMessages.ErrorRequestLLM}: {ex.Message}");
         }
-
-        
-        
     }
 }

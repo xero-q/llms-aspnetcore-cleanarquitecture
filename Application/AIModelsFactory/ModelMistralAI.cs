@@ -50,17 +50,13 @@ public class ModelMistralAI(Thread thread) : ModelAI(thread)
             response.EnsureSuccessStatusCode();
 
             var responseBody = await response.Content.ReadAsStringAsync();
-            
+
             JObject responseJson = JObject.Parse(responseBody);
 
-            if (responseJson != null)
-            {
-                var text = (string)(responseJson["choices"][0]["message"]["content"]);
 
-                return text;    
-            }
+            var text = (string)(responseJson["choices"][0]["message"]["content"]);
 
-            return null;
+            return text;
         }
         catch (Exception ex)
         {
