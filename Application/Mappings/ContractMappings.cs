@@ -71,6 +71,7 @@ public static class ContractMappings
             Name = model.Name,
             Identifier = model.Identifier,
             ModelType = model.Provider.Name,
+            Temperature = model.Temperature,
             EnvironmentVariable = model.EnvironmentVariable
         };
     }
