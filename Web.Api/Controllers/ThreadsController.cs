@@ -59,6 +59,20 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
         
         return Ok(response);
     }
+
+    [HttpDelete(ApiEndpoints.Threads.Delete)]
+    [Authorize]
+    public async Task<IActionResult> Delete([FromRoute] int id)
+    {
+        var threadDeleted = await threadService.DeleteByIdAsync(id);
+
+        if (threadDeleted == false)
+        {
+            return NotFound(new { error = ErrorMessages.ThreadNotFound });
+        }
+        
+        return Ok();
+    }
     
     private async Task<object> GetValidatedUserIdAsync()
     {

@@ -15,4 +15,6 @@ public interface IThreadService
     Task<int> GetTotalThreadsCount(int userId);
 
     Task<Thread?> GetByIdAsyncWithJoins(int threadId);
+    
+    Task<bool> DeleteByIdAsync(int id);
 }

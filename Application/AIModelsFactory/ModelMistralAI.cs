@@ -1,6 +1,7 @@
 using System.Text;
 using Application.Helpers;
 using DotNetEnv;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SharedKernel;
 using Thread = Domain.Entities.Thread;
@@ -25,23 +26,25 @@ public class ModelMistralAI(Thread thread) : ModelAI(thread)
         string url = "https://api.mistral.ai/v1/chat/completions";
 
         string modelIdentifier = thread.Model.Identifier;
+        
+        var payload = new
+        {
+            model = modelIdentifier,
+            messages = new[]
+            {
+                new { role = "system", content = "You are a helpful assistant." },
+                new { role = "user", content = prompt }
+            },
+            stream = false
+        };
 
-        var requestJson = $@"
-        {{
-            ""model"": ""{JsonHelper.EscapeJsonString(modelIdentifier)}"",
-            ""messages"": [
-                {{ ""role"": ""system"", ""content"": ""You are a helpful assistant."" }},
-                {{ ""role"": ""user"", ""content"": ""{JsonHelper.EscapeJsonString(prompt)}"" }}
-            ],
-            ""stream"": false
-        }}";
 
         using var httpClient = new HttpClient();
 
         httpClient.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
 
-        var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
+        var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
 
         try
         {

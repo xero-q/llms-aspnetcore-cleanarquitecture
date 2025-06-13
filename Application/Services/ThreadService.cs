@@ -41,4 +41,9 @@ public class ThreadService(IThreadRepository threadRepository,IValidator<Thread>
     {
         return await threadRepository.GetByIdAsync(threadId, true);
     }
+
+    public async Task<bool> DeleteByIdAsync(int id)
+    {
+       return await threadRepository.DeleteByIdAsync(id);
+    }
 }

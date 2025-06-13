@@ -1,7 +1,4 @@
-using System.Runtime.InteropServices.JavaScript;
 using System.Text;
-using System.Text.Json;
-using Application.Helpers;
 using Thread = Domain.Entities.Thread;
 using DotNetEnv;
 using Newtonsoft.Json;
@@ -32,18 +29,24 @@ public class ModelGeminiAI(Thread thread) : ModelAI(thread)
 
         var httpClient = new HttpClient();
 
-        var requestJson = $@"
-        {{
-            ""contents"": [
-                {{
-                    ""parts"": [
-                        {{ ""text"": ""{JsonHelper.EscapeJsonString(prompt)}"" }}
-                    ]
-                }}
-            ]
-        }}";
+        var payload = new
+        {
+            contents = new[]
+            {
+                new
+                {
+                    parts = new[]
+                    {
+                        new
+                        {
+                            text = prompt
+                        }
+                    }
+                }
+            }
+        };
 
-        var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
+        var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
 
         try
         {
