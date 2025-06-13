@@ -13,10 +13,10 @@ public class ModelsController(IModelService modelService, IModelTypeService mode
 {
     [HttpPost(ApiEndpoints.Models.Create)]
     [Authorize("Admin")]
-    public async Task<IActionResult> Create([FromBody] CreateModelRequest request)
+    public async Task<IActionResult> Create([FromBody] CreateModelRequest request, CancellationToken cancellationToken)
     {
         // Verify ModelType exists
-        var modelType = await modelTypeService.GetByIdAsync(request.ModelTypeId);
+        var modelType = await modelTypeService.GetByIdAsync(request.ModelTypeId, cancellationToken);
 
         if (modelType == null)
         {
@@ -24,16 +24,16 @@ public class ModelsController(IModelService modelService, IModelTypeService mode
         }
         
         var model = request.MapToModel();
-        await modelService.CreateAsync(model);
+        await modelService.CreateAsync(model, cancellationToken);
         var modelResponse = model.MapToResponse();
         return CreatedAtAction(nameof(Get), new { id = model.Id }, modelResponse);
     }
 
     [HttpGet(ApiEndpoints.Models.GetAll)]
     [Authorize]
-    public async Task<IActionResult> GetAll()
+    public async Task<IActionResult> GetAll(CancellationToken cancellationToken)
     {
-        var models = await modelService.GetAllAsync();
+        var models = await modelService.GetAllAsync(cancellationToken);
         var response = models.MapToResponse().Items;
         
         return Ok(response);
@@ -41,9 +41,9 @@ public class ModelsController(IModelService modelService, IModelTypeService mode
     
     [HttpGet(ApiEndpoints.Models.Get)]
     [Authorize]
-    public async Task<IActionResult> Get([FromRoute] int id)
+    public async Task<IActionResult> Get([FromRoute] int id, CancellationToken cancellationToken)
     {
-        var model = await modelService.GetByIdAsync(id);
+        var model = await modelService.GetByIdAsync(id, cancellationToken);
 
         if (model == null)
         {

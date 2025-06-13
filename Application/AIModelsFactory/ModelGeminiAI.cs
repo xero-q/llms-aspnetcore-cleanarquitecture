@@ -27,7 +27,7 @@ public class ModelGeminiAI(Thread thread) : ModelAI(thread)
         string url =
             $"https://generativelanguage.googleapis.com/v1beta/models/{modelIdentifier}:generateContent?key={apiKey}";
 
-        var httpClient = new HttpClient();
+        using var httpClient = new HttpClient();
 
         var payload = new
         {

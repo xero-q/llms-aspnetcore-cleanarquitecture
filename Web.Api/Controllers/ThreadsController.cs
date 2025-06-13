@@ -13,7 +13,7 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
     
     [HttpPost(ApiEndpoints.Threads.Create)]
     [Authorize]
-    public async Task<IActionResult> Create([FromRoute] int id,[FromBody] CreateThreadRequest request)
+    public async Task<IActionResult> Create([FromRoute] int id,[FromBody] CreateThreadRequest request, CancellationToken cancellationToken)
     {
         var userResult = await GetValidatedUserIdAsync();
         if (userResult is IActionResult errorResult)
@@ -23,7 +23,7 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
 
         var userId = userResult as int? ?? 0;
         
-        var threadExists = await threadService.TitleExistsAsync(userId, request.Title);
+        var threadExists = await threadService.TitleExistsAsync(userId, request.Title, cancellationToken);
 
         if (threadExists)
         {
@@ -31,7 +31,7 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
         }
         
         var thread = request.MapToThread(id, userId);
-        await threadService.CreateAsync(thread);
+        await threadService.CreateAsync(thread, cancellationToken);
         var response = thread.MapToSimpleResponse();
 
         return Created();
@@ -39,7 +39,7 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
     
     [HttpGet(ApiEndpoints.Threads.GetAll)]
     [Authorize]
-    public async Task<IActionResult> GetThreads([FromQuery] int page = 1, [FromQuery] int pageSize = 20)
+    public async Task<IActionResult> GetThreads(CancellationToken cancellationToken, [FromQuery] int page = 1, [FromQuery] int pageSize = 20)
     {
         var userResult = await GetValidatedUserIdAsync();
         if (userResult is IActionResult errorResult)
@@ -49,11 +49,11 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
 
         var userId = userResult as int? ?? 0;
         
-        var totalThreads = await threadService.GetTotalThreadsCount(userId);
+        var totalThreads = await threadService.GetTotalThreadsCount(userId, cancellationToken);
         
         bool hasMorePages = page * pageSize < totalThreads;
 
-        var threads = await threadService.GetAllByUserIdGroupedByDateAsync(userId, page, pageSize);
+        var threads = await threadService.GetAllByUserIdGroupedByDateAsync(userId, page, pageSize, cancellationToken);
 
         var response = threads.MapToResponse(page, hasMorePages);
         
@@ -62,9 +62,9 @@ public class ThreadsController(IThreadService threadService, IUserService userSe
 
     [HttpDelete(ApiEndpoints.Threads.Delete)]
     [Authorize]
-    public async Task<IActionResult> Delete([FromRoute] int id)
+    public async Task<IActionResult> Delete([FromRoute] int id,CancellationToken cancellationToken)
     {
-        var threadDeleted = await threadService.DeleteByIdAsync(id);
+        var threadDeleted = await threadService.DeleteByIdAsync(id, cancellationToken);
 
         if (threadDeleted == false)
         {

@@ -4,9 +4,9 @@ namespace Application.Abstractions.Services;
 
 public interface IModelTypeService
 {
-    Task<bool> CreateAsync(ModelType modelType);
+    Task<bool> CreateAsync(ModelType modelType, CancellationToken cancellationToken);
 
-    Task<ModelType?> GetByIdAsync(int id);
+    Task<ModelType?> GetByIdAsync(int id, CancellationToken cancellationToken);
 
-    Task<IEnumerable<ModelType>> GetAllAsync();
+    Task<IEnumerable<ModelType>> GetAllAsync(CancellationToken cancellationToken);
 }

@@ -13,22 +13,22 @@ public class PromptsController(IPromptService promptService): ControllerBase
 {
     [HttpGet(ApiEndpoints.Prompts.GetAll)]
     [Authorize]
-    public async Task<IActionResult> GetAll([FromRoute] int id)
+    public async Task<IActionResult> GetAll([FromRoute] int id, CancellationToken cancellationToken)
     {
-        var prompts = await promptService.GetAllAsyncByThread(id);
+        var prompts = await promptService.GetAllAsyncByThread(id, cancellationToken);
         var promptsResponse = prompts.MapToResponse();
         return Ok(promptsResponse.Items);
     }
 
     [HttpPost(ApiEndpoints.Prompts.Create)]
     [Authorize]
-    public async Task<IActionResult> Create([FromRoute] int id, [FromBody] CreatePromptRequest request)
+    public async Task<IActionResult> Create([FromRoute] int id, [FromBody] CreatePromptRequest request, CancellationToken cancellationToken)
     {
         Prompt? prompt;
         
         try
         {
-            prompt = await promptService.AddPromptAsync(id, request.Prompt);
+            prompt = await promptService.AddPromptAsync(id, request.Prompt, cancellationToken);
 
             if (prompt == null)
             {

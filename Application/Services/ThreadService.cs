@@ -7,43 +7,43 @@ namespace Application.Services;
 
 public class ThreadService(IThreadRepository threadRepository,IValidator<Thread> validator):IThreadService
 {
-    public async Task<bool> CreateAsync(Thread thread)
+    public async Task<bool> CreateAsync(Thread thread, CancellationToken cancellationToken = default)
     {
-        await validator.ValidateAndThrowAsync(thread);
-        return await threadRepository.CreateAsync(thread);
+        await validator.ValidateAndThrowAsync(thread, cancellationToken);
+        return await threadRepository.CreateAsync(thread, cancellationToken);
     }
 
-    public async Task<bool> TitleExistsAsync(int userId, string title)
+    public async Task<bool> TitleExistsAsync(int userId, string title, CancellationToken cancellationToken = default)
     {
-        return await threadRepository.TitleExistsAsync(userId, title);
+        return await threadRepository.TitleExistsAsync(userId, title, cancellationToken);
     }
 
-    public async Task<IEnumerable<Thread>> GetAllByUserIdAsync(int userId)
+    public async Task<IEnumerable<Thread>> GetAllByUserIdAsync(int userId,  int pageNumber = 1, int pageSize = 20,CancellationToken cancellationToken = default)
     {
-        return await threadRepository.GetAllByUserIdAsync(userId);
+        return await threadRepository.GetAllByUserIdAsync(userId, pageNumber, pageSize, cancellationToken);
     }
     
-    public async Task<Dictionary<string, List<Thread>>> GetAllByUserIdGroupedByDateAsync(int userId,int pageNumber = 1, int pageSize = 20)
+    public async Task<Dictionary<string, List<Thread>>> GetAllByUserIdGroupedByDateAsync(int userId,int pageNumber = 1, int pageSize = 20, CancellationToken cancellationToken = default)
     {
-        var threads = await threadRepository.GetAllByUserIdAsync(userId, pageNumber, pageSize);
+        var threads = await threadRepository.GetAllByUserIdAsync(userId, pageNumber, pageSize, cancellationToken);
 
         return threads
             .GroupBy(t => t.CreatedAt.Date.ToString("yyyy-MM-dd")) 
             .ToDictionary(g => g.Key, g => g.ToList());
     }
 
-    public async Task<int> GetTotalThreadsCount(int userId)
+    public async Task<int> GetTotalThreadsCount(int userId, CancellationToken cancellationToken = default)
     {
-        return await threadRepository.GetTotalThreadsCount(userId);
+        return await threadRepository.GetTotalThreadsCount(userId, cancellationToken);
     }
 
-    public async Task<Thread?> GetByIdAsyncWithJoins(int threadId)
+    public async Task<Thread?> GetByIdAsyncWithJoins(int threadId, CancellationToken cancellationToken = default)
     {
-        return await threadRepository.GetByIdAsync(threadId, true);
+        return await threadRepository.GetByIdAsync(threadId, true, cancellationToken);
     }
 
-    public async Task<bool> DeleteByIdAsync(int id)
+    public async Task<bool> DeleteByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-       return await threadRepository.DeleteByIdAsync(id);
+       return await threadRepository.DeleteByIdAsync(id, cancellationToken);
     }
 }

@@ -4,5 +4,5 @@ namespace Application.Abstractions.Repositories;
 
 public interface IPromptRepository:IGenericRepositoryAsync<Prompt>
 {
-    Task<IEnumerable<Prompt>> GetAllAsyncByThread(int threadId);
+    Task<IEnumerable<Prompt>> GetAllAsyncByThread(int threadId, CancellationToken cancellationToken = default);
 }

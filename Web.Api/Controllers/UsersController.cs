@@ -10,15 +10,15 @@ namespace Web.Api.Controllers;
 public class UsersController(IUserService userService) : ControllerBase
 {
     [HttpPost(ApiEndpoints.Auth.Signup)]
-    public async Task<IActionResult> RegisterUser([FromBody] CreateUserRequest request)
+    public async Task<IActionResult> RegisterUser([FromBody] CreateUserRequest request, CancellationToken cancellationToken)
     {
-        if (await userService.UsernameExistsAsync(request.Username))
+        if (await userService.UsernameExistsAsync(request.Username, cancellationToken))
         {
             return BadRequest(new { error = ErrorMessages.UsernameAlreadyExists });
         }
         
         var user = request.MapToUser();
-        await userService.CreateAsync(user);
+        await userService.CreateAsync(user,cancellationToken);
         var userResponse = user.MapToResponse();
         // TODO: return CreatedAtAction(nameof(Get), new { id = user.Id }, userResponse);
         return Created();

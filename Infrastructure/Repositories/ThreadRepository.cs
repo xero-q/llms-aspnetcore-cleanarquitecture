@@ -7,13 +7,13 @@ namespace Infrastructure.Repositories;
 
 public class ThreadRepository(LLMDbContext context):GenericRepositoryAsync<Thread>(context),IThreadRepository
 {
-    public async Task<bool> TitleExistsAsync(int userId, string title)
+    public async Task<bool> TitleExistsAsync(int userId, string title, CancellationToken cancellationToken = default)
     {
-        return await context.Threads.AnyAsync(t => t.UserId == userId && t.Title == title);
+        return await context.Threads.AnyAsync(t => t.UserId == userId && t.Title == title, cancellationToken);
 
     }
 
-    public async Task<IEnumerable<Thread>> GetAllByUserIdAsync(int userId, int pageNumber = 1, int pageSize = 20)
+    public async Task<IEnumerable<Thread>> GetAllByUserIdAsync(int userId, int pageNumber = 1, int pageSize = 20, CancellationToken cancellationToken = default)
     {
         return await context.Threads
             .Include(t => t.Model)
@@ -23,25 +23,25 @@ public class ThreadRepository(LLMDbContext context):GenericRepositoryAsync<Threa
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 
-    public async Task<int> GetTotalThreadsCount(int userId)
+    public async Task<int> GetTotalThreadsCount(int userId, CancellationToken cancellationToken = default)
     {
         var query = context.Threads
             .Where(t => t.UserId == userId)
             .AsNoTracking();
 
-        return await query.CountAsync();
+        return await query.CountAsync(cancellationToken);
     }
 
-    public async Task<Thread?> GetByIdAsync(int threadId, bool includeJoins = false)
+    public async Task<Thread?> GetByIdAsync(int threadId, bool includeJoins = false, CancellationToken cancellationToken = default)
     {
         if (includeJoins)
         {
-            return  await context.Threads.Include(t => t.Model).ThenInclude(m => m.Provider).FirstOrDefaultAsync(t => t.Id == threadId);
+            return  await context.Threads.Include(t => t.Model).ThenInclude(m => m.Provider).FirstOrDefaultAsync(t => t.Id == threadId, cancellationToken);
         }
 
-        return await context.Threads.FindAsync(threadId);
+        return await context.Threads.FindAsync(threadId,cancellationToken);
     }
 }

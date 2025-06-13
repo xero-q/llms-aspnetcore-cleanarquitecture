@@ -7,14 +7,14 @@ namespace Application.Services;
 
 public class PromptService(IThreadService threadService, IPromptRepository promptRepository) : IPromptService
 {
-    public async Task<IEnumerable<Prompt>> GetAllAsyncByThread(int threadId)
+    public async Task<IEnumerable<Prompt>> GetAllAsyncByThread(int threadId, CancellationToken cancellationToken = default)
     {
-        return await promptRepository.GetAllAsyncByThread(threadId);
+        return await promptRepository.GetAllAsyncByThread(threadId, cancellationToken);
     }
 
-    public async Task<Prompt?> AddPromptAsync(int threadId, string promptText)
+    public async Task<Prompt?> AddPromptAsync(int threadId, string promptText, CancellationToken cancellationToken = default)
     {
-        var thread = await threadService.GetByIdAsyncWithJoins(threadId);
+        var thread = await threadService.GetByIdAsyncWithJoins(threadId, cancellationToken);
 
         if (thread == null)
         {
@@ -54,7 +54,7 @@ public class PromptService(IThreadService threadService, IPromptRepository promp
             ThreadId = threadId
         };
 
-        var promptCreated = await promptRepository.CreateAsync(newPrompt);
+        var promptCreated = await promptRepository.CreateAsync(newPrompt, cancellationToken);
 
         if (promptCreated == false)
         {

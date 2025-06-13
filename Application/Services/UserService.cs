@@ -8,9 +8,9 @@ namespace Application.Services;
 
 public class UserService(IUserRepository userRepository, IValidator<User> validator) : IUserService
 {
-    public async Task<bool> CreateAsync(User user)
+    public async Task<bool> CreateAsync(User user, CancellationToken cancellationToken = default)
     {
-        await validator.ValidateAndThrowAsync(user);
+        await validator.ValidateAndThrowAsync(user, cancellationToken);
         var hashedUser = new User
         {
             Id = user.Id,
@@ -18,21 +18,21 @@ public class UserService(IUserRepository userRepository, IValidator<User> valida
             Password = PasswordHelper.HashPassword(user.Password)
         };
 
-        return await userRepository.CreateAsync(hashedUser);
+        return await userRepository.CreateAsync(hashedUser, cancellationToken);
     }
     
-    public async Task<bool> UsernameExistsAsync(string username)
+    public async Task<bool> UsernameExistsAsync(string username, CancellationToken cancellationToken = default)
     {
-        return await userRepository.UsernameExistsAsync(username);
+        return await userRepository.UsernameExistsAsync(username, cancellationToken);
     }
 
-    public async Task<User?> GetByUsernameAsync(string username)
+    public async Task<User?> GetByUsernameAsync(string username, CancellationToken cancellationToken = default)
     {
-        return await userRepository.GetByUsernameAsync(username);
+        return await userRepository.GetByUsernameAsync(username, cancellationToken);
     }
 
-    public async Task<User?> GetByIdAsync(int id)
+    public async Task<User?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
     {
-        return await userRepository.GetByIdAsync(id);
+        return await userRepository.GetByIdAsync(id, cancellationToken);
     }
 }

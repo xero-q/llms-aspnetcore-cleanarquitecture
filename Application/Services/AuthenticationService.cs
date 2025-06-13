@@ -12,9 +12,9 @@ namespace Application.Services;
 
 public class AuthenticationService(IConfiguration config, IUserService userService) : IAuthenticationService
 {
-    public async Task<User?> AuthenticateUser(LoginRequest request)
+    public async Task<User?> AuthenticateUser(LoginRequest request, CancellationToken cancellationToken = default)
     {
-        var user = await userService.GetByUsernameAsync(request.Username);
+        var user = await userService.GetByUsernameAsync(request.Username,cancellationToken);
 
         if (user == null)
         {
@@ -31,9 +31,9 @@ public class AuthenticationService(IConfiguration config, IUserService userServi
         return null;
     }
     
-    public async Task<string?> GenerateToken(string username, bool isAdmin)
+    public async Task<string?> GenerateToken(string username, bool isAdmin, CancellationToken cancellationToken = default)
     {
-        var user = await userService.GetByUsernameAsync(username);
+        var user = await userService.GetByUsernameAsync(username, cancellationToken);
 
         if (user == null)
         {
