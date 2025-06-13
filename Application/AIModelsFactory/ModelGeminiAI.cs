@@ -43,6 +43,10 @@ public class ModelGeminiAI(Thread thread) : ModelAI(thread)
                         }
                     }
                 }
+            },
+            generationConfig = new
+            {
+                temperature = thread.Model.Temperature
             }
         };
 

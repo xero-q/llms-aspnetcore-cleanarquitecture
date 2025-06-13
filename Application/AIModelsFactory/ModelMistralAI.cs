@@ -35,6 +35,7 @@ public class ModelMistralAI(Thread thread) : ModelAI(thread)
                 new { role = "system", content = "You are a helpful assistant." },
                 new { role = "user", content = prompt }
             },
+            temperature = thread.Model.Temperature,
             stream = false
         };
 
