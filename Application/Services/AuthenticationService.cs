@@ -4,6 +4,7 @@ using System.Text;
 using Application.Abstractions.Services;
 using Application.Contracts.Requests;
 using Application.Helpers;
+using Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
@@ -11,19 +12,26 @@ namespace Application.Services;
 
 public class AuthenticationService(IConfiguration config, IUserService userService) : IAuthenticationService
 {
-    public async Task<bool> VerifyUser(LoginRequest request)
+    public async Task<User?> AuthenticateUser(LoginRequest request)
     {
         var user = await userService.GetByUsernameAsync(request.Username);
 
         if (user == null)
         {
-            return false;
+            return null;
         }
 
-        return PasswordHelper.VerifyPassword(request.Password, user.Password);
+        bool passwordMatch =  PasswordHelper.VerifyPassword(request.Password, user.Password);
+
+        if (passwordMatch)
+        {
+            return user;
+        }
+        
+        return null;
     }
     
-    public async Task<string?> GenerateToken(string username)
+    public async Task<string?> GenerateToken(string username, bool isAdmin)
     {
         var user = await userService.GetByUsernameAsync(username);
 
@@ -34,20 +42,25 @@ public class AuthenticationService(IConfiguration config, IUserService userServi
         
         var jwtConfig = config.GetSection("Jwt");
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtConfig["Key"]!));
-        var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
-        var claims = new[]
+        var claims = new List<Claim>()
         {
             new Claim(ClaimTypes.Name, username),
             new Claim("userId",user.Id.ToString())
         };
+
+        if (user.IsAdmin)
+        {
+            claims.Add(new Claim("Admin", "true"));
+        }
 
         var token = new JwtSecurityToken(
             issuer: jwtConfig["Issuer"],
             audience: jwtConfig["Audience"],
             claims: claims,
             expires: DateTime.UtcNow.AddMinutes(Convert.ToDouble(jwtConfig["DurationInMinutes"])),
-            signingCredentials: creds);
+            signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
     }

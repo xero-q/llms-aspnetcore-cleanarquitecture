@@ -1,10 +1,11 @@
 using Application.Contracts.Requests;
+using Domain.Entities;
 
 namespace Application.Abstractions.Services;
 
 public interface IAuthenticationService
 {
-    Task<bool> VerifyUser(LoginRequest request);
+    Task<User?> AuthenticateUser(LoginRequest request);
 
-    Task<string?> GenerateToken(string username);
+    Task<string?> GenerateToken(string username, bool isAdmin);
 }

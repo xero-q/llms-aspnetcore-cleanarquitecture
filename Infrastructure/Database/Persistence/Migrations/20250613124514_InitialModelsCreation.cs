@@ -32,7 +32,8 @@ namespace Infrastructure.Database.Persistence.Migrations
                     id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     username = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
-                    password = table.Column<string>(type: "text", nullable: false)
+                    password = table.Column<string>(type: "text", nullable: false),
+                    is_admin = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,21 +71,21 @@ namespace Infrastructure.Database.Persistence.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     title = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    ModelId = table.Column<int>(type: "integer", nullable: false),
-                    UserId = table.Column<int>(type: "integer", nullable: false)
+                    model_id = table.Column<int>(type: "integer", nullable: false),
+                    user_id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_threads", x => x.id);
                     table.ForeignKey(
-                        name: "FK_threads_models_ModelId",
-                        column: x => x.ModelId,
+                        name: "FK_threads_models_model_id",
+                        column: x => x.model_id,
                         principalTable: "models",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_threads_users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_threads_users_user_id",
+                        column: x => x.user_id,
                         principalTable: "users",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Restrict);
@@ -99,14 +100,14 @@ namespace Infrastructure.Database.Persistence.Migrations
                     prompt = table.Column<string>(type: "text", nullable: false),
                     response = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    ThreadId = table.Column<int>(type: "integer", nullable: false)
+                    thread_id = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_prompts", x => x.id);
                     table.ForeignKey(
-                        name: "FK_prompts_threads_ThreadId",
-                        column: x => x.ThreadId,
+                        name: "FK_prompts_threads_thread_id",
+                        column: x => x.thread_id,
                         principalTable: "threads",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -124,25 +125,19 @@ namespace Infrastructure.Database.Persistence.Migrations
                 column: "model_type_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_prompts_ThreadId",
+                name: "IX_prompts_thread_id",
                 table: "prompts",
-                column: "ThreadId");
+                column: "thread_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_threads_ModelId",
+                name: "IX_threads_model_id",
                 table: "threads",
-                column: "ModelId");
+                column: "model_id");
 
             migrationBuilder.CreateIndex(
-                name: "IX_threads_title",
+                name: "IX_threads_user_id",
                 table: "threads",
-                column: "title",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
-                name: "IX_threads_UserId",
-                table: "threads",
-                column: "UserId");
+                column: "user_id");
 
             migrationBuilder.CreateIndex(
                 name: "IX_users_username",

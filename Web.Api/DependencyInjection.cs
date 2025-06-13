@@ -17,7 +17,12 @@ public static class DependencyInjection
                     .AllowAnyMethod(); // Allows POST, GET, OPTIONS, etc.
             });
         });
-
+        
+        services.AddAuthorization(options =>
+        {
+            options.AddPolicy("Admin", policy =>
+                policy.RequireClaim("Admin","true"));
+        });
 
         return services;
     } 

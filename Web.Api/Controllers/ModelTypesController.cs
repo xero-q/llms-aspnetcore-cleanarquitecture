@@ -10,7 +10,7 @@ namespace Web.Api.Controllers;
 public class ModelTypesController(IModelTypeService modelTypeService) : ControllerBase
 {
     [HttpPost(ApiEndpoints.ModelTypes.Create)]
-    [Authorize]
+    [Authorize("Admin")]
     public async Task<IActionResult> Create([FromBody] CreateModelTypeRequest request)
     {
         var modelType = request.MapToModelType();

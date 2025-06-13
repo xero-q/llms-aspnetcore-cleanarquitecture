@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Database.Persistence.Migrations
 {
     [DbContext(typeof(LLMDbContext))]
-    [Migration("20250609200343_InitialModelsCreation")]
+    [Migration("20250613124514_InitialModelsCreation")]
     partial class InitialModelsCreation
     {
         /// <inheritdoc />
@@ -115,7 +115,8 @@ namespace Infrastructure.Database.Persistence.Migrations
                         .HasColumnName("response");
 
                     b.Property<int>("ThreadId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("thread_id");
 
                     b.HasKey("Id");
 
@@ -140,7 +141,8 @@ namespace Infrastructure.Database.Persistence.Migrations
                         .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                     b.Property<int>("ModelId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("model_id");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -149,14 +151,12 @@ namespace Infrastructure.Database.Persistence.Migrations
                         .HasColumnName("title");
 
                     b.Property<int>("UserId")
-                        .HasColumnType("integer");
+                        .HasColumnType("integer")
+                        .HasColumnName("user_id");
 
                     b.HasKey("Id");
 
                     b.HasIndex("ModelId");
-
-                    b.HasIndex("Title")
-                        .IsUnique();
 
                     b.HasIndex("UserId");
 
@@ -171,6 +171,10 @@ namespace Infrastructure.Database.Persistence.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("IsAdmin")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_admin");
 
                     b.Property<string>("Password")
                         .IsRequired()

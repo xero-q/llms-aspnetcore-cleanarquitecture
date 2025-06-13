@@ -12,7 +12,7 @@ public class ModelsController(IModelService modelService, IModelTypeService mode
     : ControllerBase
 {
     [HttpPost(ApiEndpoints.Models.Create)]
-    [Authorize]
+    [Authorize("Admin")]
     public async Task<IActionResult> Create([FromBody] CreateModelRequest request)
     {
         // Verify ModelType exists

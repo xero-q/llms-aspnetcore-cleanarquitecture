@@ -1,5 +1,6 @@
 using System.Text;
 using Application.Helpers;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using SharedKernel;
 using Thread = Domain.Entities.Thread;
@@ -23,20 +24,22 @@ public class ModelDeepSeekAI(Thread thread) : ModelAI(thread)
 
         string modelIdentifier = thread.Model.Identifier;
 
-        var requestJson = $@"
-        {{
-            ""model"": ""{JsonHelper.EscapeJsonString(modelIdentifier)}"",
-            ""messages"": [
-                {{ ""role"": ""system"", ""content"": ""You are a helpful assistant."" }},
-                {{ ""role"": ""user"", ""content"": ""{JsonHelper.EscapeJsonString(prompt)}"" }}
-            ],
-            ""stream"": false
-        }}";
-
+        var payload = new
+        {
+            model = modelIdentifier,
+            messages = new[]
+            {
+                new { role = "system", content = "You are a helpful assistant." },
+                new { role = "user", content = prompt },
+            },
+            stream = false,
+            temperature = thread.Model.Temperature,
+        };
+        
         using var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Authorization =
             new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiKey);
-        var content = new StringContent(requestJson, Encoding.UTF8, "application/json");
+        var content = new StringContent(JsonConvert.SerializeObject(payload), Encoding.UTF8, "application/json");
 
         try
         {

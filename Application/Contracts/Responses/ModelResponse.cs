@@ -9,5 +9,7 @@ public sealed class ModelResponse
     public required string Identifier { get; init; }
 
     public required string ModelType { get; init; }
+    
+    public required string EnvironmentVariable { get; init; }
 
 }

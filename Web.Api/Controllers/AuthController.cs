@@ -12,14 +12,14 @@ public class AuthController(IAuthenticationService authenticationService) : Cont
     [HttpPost(ApiEndpoints.Auth.Login)]
     public async Task<IActionResult> LoginUser([FromBody] LoginRequest request)
     {
-        var userPasswordCorrect = await authenticationService.VerifyUser(request);
+        var user = await authenticationService.AuthenticateUser(request);
 
-        if (!userPasswordCorrect)
+        if (user == null)
         {
             return Unauthorized(new {error = ErrorMessages.UsernamePasswordInvalid});
         }
         
-        var token = await authenticationService.GenerateToken(request.Username);
+        var token = await authenticationService.GenerateToken(user.Username,user.IsAdmin);
 
         if (token == null)
         {

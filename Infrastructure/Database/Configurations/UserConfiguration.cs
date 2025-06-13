@@ -15,6 +15,9 @@ public class UserConfiguration:IEntityTypeConfiguration<User>
         
         builder.Property(u => u.Username).HasColumnName("username").IsRequired().HasMaxLength(255);
         builder.Property(u => u.Password).HasColumnName("password").IsRequired();
+        
+        builder.Property(u=>u.IsAdmin).HasColumnName("is_admin").IsRequired();
+        
         builder.HasIndex(u=>u.Username).IsUnique();
     }
 }

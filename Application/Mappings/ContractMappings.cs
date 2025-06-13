@@ -37,7 +37,8 @@ public static class ContractMappings
         return new User
         {
             Username = request.Username,
-            Password = request.Password
+            Password = request.Password,
+            IsAdmin = false
         };
     }
     
@@ -69,7 +70,8 @@ public static class ContractMappings
             Id = model.Id,
             Name = model.Name,
             Identifier = model.Identifier,
-            ModelType = model.Provider.Name
+            ModelType = model.Provider.Name,
+            EnvironmentVariable = model.EnvironmentVariable
         };
     }
     
