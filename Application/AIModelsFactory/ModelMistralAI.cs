@@ -1,4 +1,5 @@
 using System.Text;
+using Application.Abstractions.Services;
 using Application.Helpers;
 using DotNetEnv;
 using Newtonsoft.Json;
@@ -8,7 +9,7 @@ using Thread = Domain.Entities.Thread;
 
 namespace Application.AIModelsFactory;
 
-public class ModelMistralAI(Thread thread) : ModelAI(thread)
+public class ModelMistralAI(Thread thread, IPromptService promptService) : ModelAI(thread)
 {
     public override async Task<string?> SendPrompt(string prompt)
     {
@@ -27,14 +28,35 @@ public class ModelMistralAI(Thread thread) : ModelAI(thread)
 
         string modelIdentifier = thread.Model.Identifier;
         
+        var prompts = await promptService.GetAllAsyncByThread(thread.Id);
+
+        var messages = new List<object>();
+
+        foreach (var promptRecord in prompts)
+        {
+            messages.Add(new
+            {
+                role = "user",
+                content = promptRecord.PromptText
+            });
+            
+            messages.Add(new
+            {
+                role = "system",
+                content = promptRecord.Response
+            });
+        }
+        
+        messages.Add(new
+        {
+            role = "user",
+            content = prompt
+        });
+        
         var payload = new
         {
             model = modelIdentifier,
-            messages = new[]
-            {
-                new { role = "system", content = "You are a helpful assistant." },
-                new { role = "user", content = prompt }
-            },
+            messages = messages.ToArray(),
             temperature = thread.Model.Temperature,
             stream = false
         };

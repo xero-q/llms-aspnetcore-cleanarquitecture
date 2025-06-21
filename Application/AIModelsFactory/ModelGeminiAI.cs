@@ -1,4 +1,5 @@
 using System.Text;
+using Application.Abstractions.Services;
 using Thread = Domain.Entities.Thread;
 using DotNetEnv;
 using Newtonsoft.Json;
@@ -7,7 +8,7 @@ using SharedKernel;
 
 namespace Application.AIModelsFactory;
 
-public class ModelGeminiAI(Thread thread) : ModelAI(thread)
+public class ModelGeminiAI(Thread thread, IPromptService promptService) : ModelAI(thread)
 {
     public override async Task<string?> SendPrompt(string prompt)
     {
@@ -29,21 +30,43 @@ public class ModelGeminiAI(Thread thread) : ModelAI(thread)
 
         using var httpClient = new HttpClient();
 
+        var prompts = await promptService.GetAllAsyncByThread(thread.Id);
+
+        var contents = new List<object>();
+
+        foreach (var promptRecord in prompts)
+        {
+            contents.Add(new
+            {
+                role = "user",
+                parts = new []
+                {
+                    new {text = promptRecord.PromptText}
+                }
+            });
+            
+            contents.Add(new
+            {
+                role = "model",
+                parts = new []
+                {
+                    new {text = promptRecord.Response}
+                }
+            });
+        }
+        
+        contents.Add(new
+        {
+            role = "user",
+            parts = new []
+            {
+                new {text = prompt}
+            }
+        });
+        
         var payload = new
         {
-            contents = new[]
-            {
-                new
-                {
-                    parts = new[]
-                    {
-                        new
-                        {
-                            text = prompt
-                        }
-                    }
-                }
-            },
+            contents = contents.ToArray(),
             generationConfig = new
             {
                 temperature = thread.Model.Temperature

@@ -37,7 +37,7 @@ public class PromptService(IThreadService threadService, IPromptRepository promp
             return null;
         }
 
-        IModelAI modelAI = modelAIFactory.CreateModelAI(thread);
+        IModelAI modelAI = modelAIFactory.CreateModelAI(thread, this);
 
 
         var response = await modelAI.SendPrompt(promptText);
